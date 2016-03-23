@@ -24,6 +24,11 @@ class AMQPPublisherTest extends \PHPUnit_Framework_TestCase
     private $amqpChannel;
 
     /**
+     * @var AMQPPublisher
+     */
+    private $amqpPublisher;
+
+    /**
      * @var DomainMessage
      */
     private $domainMessage;
@@ -36,6 +41,12 @@ class AMQPPublisherTest extends \PHPUnit_Framework_TestCase
             array(),
             "AMQPChannel",
             false
+        );
+
+        $this->amqpPublisher = new AMQPPublisher(
+            $this->amqpChannel,
+            null,
+            new DummyAlwaysSatisfied()
         );
 
         $this->domainMessage = new DomainMessage(
@@ -55,13 +66,7 @@ class AMQPPublisherTest extends \PHPUnit_Framework_TestCase
      */
     public function it_does_publish_a_domain_message_when_specification_is_satisfied()
     {
-        $amqpPublisher = new AMQPPublisher(
-            $this->amqpChannel,
-            null,
-            new DummyAlwaysSatisfied()
-        );
-
-        $amqpPublisher = $amqpPublisher->withContentType(
+        $amqpPublisher = $this->amqpPublisher->withContentType(
             DummyEvent::class,
             'application/vnd.cultuurnet.udb3-events.dummy-event+json'
         );
@@ -119,13 +124,7 @@ class AMQPPublisherTest extends \PHPUnit_Framework_TestCase
             BroadwayDateTime::fromString('2015-01-02T08:40:00+0100')
         );
 
-        $amqpPublisher = new AMQPPublisher(
-            $this->amqpChannel,
-            null,
-            new DummyAlwaysSatisfied()
-        );
-
-        $amqpPublisher = $amqpPublisher->withContentType(
+        $amqpPublisher = $this->amqpPublisher->withContentType(
             DummyEventNotSerializable::class,
             'application/vnd.cultuurnet.udb3-events.dummy-event-not-serializable+json'
         );
@@ -143,18 +142,12 @@ class AMQPPublisherTest extends \PHPUnit_Framework_TestCase
      */
     public function it_throws_runtime_exception_for_a_satisfied_specification_with_missing_content_type()
     {
-        $amqpPublisher = new AMQPPublisher(
-            $this->amqpChannel,
-            null,
-            new DummyAlwaysSatisfied()
-        );
-
         $this->setExpectedException(
             \RuntimeException::class,
             'Unable to find the content type of CultuurNet\BroadwayAMQP\Dummies\DummyEvent'
         );
 
-        $amqpPublisher->handle($this->domainMessage);
+        $this->amqpPublisher->handle($this->domainMessage);
     }
 
     /**
@@ -162,13 +155,7 @@ class AMQPPublisherTest extends \PHPUnit_Framework_TestCase
      */
     public function it_throws_runtime_exception_when_setting_the_same_content_type()
     {
-        $amqpPublisher = new AMQPPublisher(
-            $this->amqpChannel,
-            null,
-            new DummyAlwaysSatisfied()
-        );
-
-        $amqpPublisher = $amqpPublisher->withContentType(
+        $amqpPublisher = $this->amqpPublisher->withContentType(
             DummyEvent::class,
             'application/vnd.cultuurnet.udb3-events.dummy-event+json'
         );
@@ -177,7 +164,7 @@ class AMQPPublisherTest extends \PHPUnit_Framework_TestCase
             \InvalidArgumentException::class
         );
 
-        $amqpPublisher = $amqpPublisher->withContentType(
+        $amqpPublisher->withContentType(
             DummyEvent::class,
             'application/vnd.cultuurnet.udb3-events.dummy-event+json'
         );
@@ -193,13 +180,7 @@ class AMQPPublisherTest extends \PHPUnit_Framework_TestCase
             'Value for argument payloadClass should be a string'
         );
 
-        $amqpPublisher = new AMQPPublisher(
-            $this->amqpChannel,
-            null,
-            new DummyAlwaysSatisfied()
-        );
-
-        $amqpPublisher = $amqpPublisher->withContentType(
+        $this->amqpPublisher->withContentType(
             1,
             'application/vnd.cultuurnet.udb3-events.dummy-event+json'
         );
@@ -215,13 +196,7 @@ class AMQPPublisherTest extends \PHPUnit_Framework_TestCase
             'Value for argument contentType should be a string'
         );
 
-        $amqpPublisher = new AMQPPublisher(
-            $this->amqpChannel,
-            null,
-            new DummyAlwaysSatisfied()
-        );
-
-        $amqpPublisher = $amqpPublisher->withContentType(
+        $this->amqpPublisher->withContentType(
             DummyEvent::class,
             1
         );
