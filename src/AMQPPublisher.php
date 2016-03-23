@@ -178,8 +178,9 @@ class AMQPPublisher implements EventListenerInterface
         }
 
         if (isset($this->payloadClassToContentTypeMap[$payloadClass])) {
+            $currentContentType = $this->payloadClassToContentTypeMap[$payloadClass];
             throw new \InvalidArgumentException(
-                'Content type for class ' . $payloadClass . ' was already set to ' . $this->payloadClassToContentTypeMap[$payloadClass]
+                'Content type for class ' . $payloadClass . ' was already set to ' . $currentContentType
             );
         }
         $this->payloadClassToContentTypeMap[$payloadClass] = $contentType;
