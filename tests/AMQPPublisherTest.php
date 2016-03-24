@@ -11,6 +11,7 @@ use CultuurNet\BroadwayAMQP\Dummies\DummyEventNotSerializable;
 use CultuurNet\BroadwayAMQP\Dummies\DummyNeverSatisfied;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class AMQPPublisherTest
@@ -200,5 +201,59 @@ class AMQPPublisherTest extends \PHPUnit_Framework_TestCase
             DummyEvent::class,
             1
         );
+    }
+
+    /**
+     * @test
+     */
+    public function it_logs_a_message_when_publishing()
+    {
+        $amqpPublisher = $this->amqpPublisher->withContentType(
+            DummyEvent::class,
+            'application/vnd.cultuurnet.udb3-events.dummy-event+json'
+        );
+
+        /** @var LoggerInterface|\PHPUnit_Framework_MockObject_MockObject $logger */
+        $logger = $this->getMock(LoggerInterface::class);
+        $amqpPublisher->setLogger($logger);
+
+        $logger
+            ->expects($this->once())
+            ->method('info')
+            ->with(
+                'publishing message with event type CultuurNet\BroadwayAMQP\Dummies\DummyEvent to exchange '
+            );
+
+        $amqpPublisher->handle($this->domainMessage);
+    }
+
+    /**
+     * @test
+     */
+    public function it_logs_a_message_when_specification_is_not_satisfied()
+    {
+        $amqpPublisher = new AMQPPublisher(
+            $this->amqpChannel,
+            null,
+            new DummyNeverSatisfied()
+        );
+
+        $amqpPublisher = $amqpPublisher->withContentType(
+            DummyEvent::class,
+            'application/vnd.cultuurnet.udb3-events.dummy-event+json'
+        );
+
+        /** @var LoggerInterface|\PHPUnit_Framework_MockObject_MockObject $logger */
+        $logger = $this->getMock(LoggerInterface::class);
+        $amqpPublisher->setLogger($logger);
+
+        $logger
+            ->expects($this->once())
+            ->method('warning')
+            ->with(
+                'message was skipped by specification CultuurNet\BroadwayAMQP\Dummies\DummyNeverSatisfied'
+            );
+
+        $amqpPublisher->handle($this->domainMessage);
     }
 }
