@@ -126,21 +126,22 @@ class EventBusForwardingConsumer implements LoggerAwareInterface
             $deserializer = $this->deserializerLocator->getDeserializerForContentType(
                 $contentType
             );
-            $event = $deserializer->deserialize(
+            $domainMessage = $deserializer->deserialize(
                 new StringLiteral($message->body)
             );
 
-            $events = [
-                new DomainMessage(
+            // If the deserializer did not return a DomainMessage yet, then
+            // consider the returned value as the payload, and wrap it in a
+            // DomainMessage.
+            if (!$domainMessage instanceof DomainMessage) {
+                $domainMessage = new DomainMessage(
                     UUID::generateAsString(),
                     0,
                     new Metadata($context),
-                    $event,
+                    $domainMessage,
                     DateTime::now()
-                ),
-            ];
-
-            $stream = new DomainEventStream($events);
+                );
+            }
 
             $this->delayIfNecessary();
 
@@ -152,7 +153,7 @@ class EventBusForwardingConsumer implements LoggerAwareInterface
             }
 
             $this->eventBus->publish(
-                $stream
+                new DomainEventStream([$domainMessage])
             );
 
         } catch (\Exception $e) {
