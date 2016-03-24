@@ -33,6 +33,11 @@ class AMQPPublisherTest extends \PHPUnit_Framework_TestCase
      * @var DomainMessage
      */
     private $domainMessage;
+
+    /**
+     * @var ContentTypeLookupInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $contentTypeLookup;
     
     protected function setUp()
     {
@@ -44,10 +49,13 @@ class AMQPPublisherTest extends \PHPUnit_Framework_TestCase
             false
         );
 
+        $this->contentTypeLookup = new ContentTypeLookup();
+
         $this->amqpPublisher = new AMQPPublisher(
             $this->amqpChannel,
             null,
-            new DummyAlwaysSatisfied()
+            new DummyAlwaysSatisfied(),
+            $this->contentTypeLookup
         );
 
         $this->domainMessage = new DomainMessage(
@@ -67,9 +75,16 @@ class AMQPPublisherTest extends \PHPUnit_Framework_TestCase
      */
     public function it_does_publish_a_domain_message_when_specification_is_satisfied()
     {
-        $amqpPublisher = $this->amqpPublisher->withContentType(
+        $this->contentTypeLookup = $this->contentTypeLookup->withContentType(
             DummyEvent::class,
             'application/vnd.cultuurnet.udb3-events.dummy-event+json'
+        );
+
+        $amqpPublisher = new AMQPPublisher(
+            $this->amqpChannel,
+            null,
+            new DummyAlwaysSatisfied(),
+            $this->contentTypeLookup
         );
 
         $expectedBody = '{"id":"F68E71A1-DBB0-4542-AEE5-BD937E095F74","content":"test 123 456"}';
@@ -92,15 +107,16 @@ class AMQPPublisherTest extends \PHPUnit_Framework_TestCase
      */
     public function it_does_not_publish_a_domain_message_when_specification_is_not_satisfied()
     {
+        $contentTypeLookup = $this->contentTypeLookup->withContentType(
+            DummyEvent::class,
+            'application/vnd.cultuurnet.udb3-events.dummy-event+json'
+        );
+
         $amqpPublisher = new AMQPPublisher(
             $this->amqpChannel,
             null,
-            new DummyNeverSatisfied()
-        );
-
-        $amqpPublisher = $amqpPublisher->withContentType(
-            DummyEvent::class,
-            'application/vnd.cultuurnet.udb3-events.dummy-event+json'
+            new DummyNeverSatisfied(),
+            $contentTypeLookup
         );
 
         $this->amqpChannel->expects($this->never())
@@ -125,7 +141,7 @@ class AMQPPublisherTest extends \PHPUnit_Framework_TestCase
             BroadwayDateTime::fromString('2015-01-02T08:40:00+0100')
         );
 
-        $amqpPublisher = $this->amqpPublisher->withContentType(
+        $this->contentTypeLookup = $this->contentTypeLookup->withContentType(
             DummyEventNotSerializable::class,
             'application/vnd.cultuurnet.udb3-events.dummy-event-not-serializable+json'
         );
@@ -135,7 +151,7 @@ class AMQPPublisherTest extends \PHPUnit_Framework_TestCase
             'Unable to serialize CultuurNet\BroadwayAMQP\Dummies\DummyEventNotSerializable'
         );
 
-        $amqpPublisher->handle($domainMessage);
+        $this->amqpPublisher->handle($domainMessage);
     }
 
     /**
@@ -154,63 +170,18 @@ class AMQPPublisherTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_throws_runtime_exception_when_setting_the_same_content_type()
-    {
-        $amqpPublisher = $this->amqpPublisher->withContentType(
-            DummyEvent::class,
-            'application/vnd.cultuurnet.udb3-events.dummy-event+json'
-        );
-
-        $this->setExpectedException(
-            \InvalidArgumentException::class
-        );
-
-        $amqpPublisher->withContentType(
-            DummyEvent::class,
-            'application/vnd.cultuurnet.udb3-events.dummy-event+json'
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function it_throws_invalid_argument_exception_when_payload_class_is_not_a_string()
-    {
-        $this->setExpectedException(
-            \InvalidArgumentException::class,
-            'Value for argument payloadClass should be a string'
-        );
-
-        $this->amqpPublisher->withContentType(
-            1,
-            'application/vnd.cultuurnet.udb3-events.dummy-event+json'
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function it_throws_invalid_argument_exception_when_content_type_is_not_a_string()
-    {
-        $this->setExpectedException(
-            \InvalidArgumentException::class,
-            'Value for argument contentType should be a string'
-        );
-
-        $this->amqpPublisher->withContentType(
-            DummyEvent::class,
-            1
-        );
-    }
-
-    /**
-     * @test
-     */
     public function it_logs_a_message_when_publishing()
     {
-        $amqpPublisher = $this->amqpPublisher->withContentType(
+        $this->contentTypeLookup = $this->contentTypeLookup->withContentType(
             DummyEvent::class,
             'application/vnd.cultuurnet.udb3-events.dummy-event+json'
+        );
+
+        $amqpPublisher = new AMQPPublisher(
+            $this->amqpChannel,
+            null,
+            new DummyAlwaysSatisfied(),
+            $this->contentTypeLookup
         );
 
         /** @var LoggerInterface|\PHPUnit_Framework_MockObject_MockObject $logger */
@@ -232,15 +203,16 @@ class AMQPPublisherTest extends \PHPUnit_Framework_TestCase
      */
     public function it_logs_a_message_when_specification_is_not_satisfied()
     {
+        $this->contentTypeLookup = $this->contentTypeLookup->withContentType(
+            DummyEvent::class,
+            'application/vnd.cultuurnet.udb3-events.dummy-event+json'
+        );
+        
         $amqpPublisher = new AMQPPublisher(
             $this->amqpChannel,
             null,
-            new DummyNeverSatisfied()
-        );
-
-        $amqpPublisher = $amqpPublisher->withContentType(
-            DummyEvent::class,
-            'application/vnd.cultuurnet.udb3-events.dummy-event+json'
+            new DummyNeverSatisfied(),
+            $this->contentTypeLookup
         );
 
         /** @var LoggerInterface|\PHPUnit_Framework_MockObject_MockObject $logger */
