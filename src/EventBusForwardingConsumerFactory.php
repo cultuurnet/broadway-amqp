@@ -63,7 +63,8 @@ class EventBusForwardingConsumerFactory
      * @param StringLiteral $queue
      * @return EventBusForwardingConsumer
      */
-    public function create(StringLiteral $exchange, StringLiteral $queue) {
+    public function create(StringLiteral $exchange, StringLiteral $queue)
+    {
         $connection = new AMQPStreamConnection(
             $this->connectionConfig['host'],
             $this->connectionConfig['port'],

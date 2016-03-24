@@ -224,7 +224,8 @@ class EventBusForwardingConsumer implements LoggerAwareInterface
     /**
      * @return AMQPStreamConnection
      */
-    public function getConnection() {
+    public function getConnection()
+    {
         return $this->connection;
     }
 }
