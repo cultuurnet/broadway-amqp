@@ -7,9 +7,13 @@ use Broadway\EventHandling\EventListenerInterface;
 use Broadway\Serializer\SerializableInterface;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
+use Psr\Log\LoggerAwareTrait;
+use Psr\Log\NullLogger;
 
 class AMQPPublisher implements EventListenerInterface
 {
+    use LoggerAwareTrait;
+
     /**
      * @var string
      */
@@ -43,6 +47,7 @@ class AMQPPublisher implements EventListenerInterface
         $this->channel = $channel;
         $this->exchange = $exchange;
         $this->domainMessageSpecification = $domainMessageSpecification;
+        $this->logger = new NullLogger();
     }
 
     /**
@@ -53,9 +58,10 @@ class AMQPPublisher implements EventListenerInterface
     {
         if ($this->domainMessageSpecification->isSatisfiedBy($domainMessage)) {
             $this->publishWithAMQP($domainMessage);
+            return;
         }
 
-        // TODO: Logging published and not published.
+        $this->logger->warning('message was skipped by specification ' . get_class($this->domainMessageSpecification));
     }
 
     /**
@@ -66,6 +72,13 @@ class AMQPPublisher implements EventListenerInterface
         $key = null;
 
         $message = $this->createAMQPMessage($domainMessage);
+
+        $payload = $domainMessage->getPayload();
+        $eventClass = get_class($payload);
+
+        $this->logger->info(
+            'publishing message with event type ' . $eventClass . ' to exchange ' . $this->exchange
+        );
 
         $this->channel->basic_publish(
             $message,
@@ -178,8 +191,9 @@ class AMQPPublisher implements EventListenerInterface
         }
 
         if (isset($this->payloadClassToContentTypeMap[$payloadClass])) {
+            $currentContentType = $this->payloadClassToContentTypeMap[$payloadClass];
             throw new \InvalidArgumentException(
-                'Content type for class ' . $payloadClass . ' was already set to ' . $this->payloadClassToContentTypeMap[$payloadClass]
+                'Content type for class ' . $payloadClass . ' was already set to ' . $currentContentType
             );
         }
         $this->payloadClassToContentTypeMap[$payloadClass] = $contentType;
