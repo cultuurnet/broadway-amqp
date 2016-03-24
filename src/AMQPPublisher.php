@@ -30,23 +30,26 @@ class AMQPPublisher implements EventListenerInterface
     private $channel;
 
     /**
-     * @var string[]
+     * @var ContentTypeLookup
      */
-    private $payloadClassToContentTypeMap;
+    private $contentTypeLookup;
 
     /**
      * @param AMQPChannel $channel
      * @param $exchange
      * @param SpecificationInterface $domainMessageSpecification
+     * @param ContentTypeLookupInterface $contentTypeLookup
      */
     public function __construct(
         AMQPChannel $channel,
         $exchange,
-        SpecificationInterface $domainMessageSpecification
+        SpecificationInterface $domainMessageSpecification,
+        ContentTypeLookupInterface $contentTypeLookup
     ) {
         $this->channel = $channel;
         $this->exchange = $exchange;
         $this->domainMessageSpecification = $domainMessageSpecification;
+        $this->contentTypeLookup = $contentTypeLookup;
         $this->logger = new NullLogger();
     }
 
@@ -150,52 +153,6 @@ class AMQPPublisher implements EventListenerInterface
         $payload = $domainMessage->getPayload();
         $payloadClass = get_class($payload);
 
-        if (isset($this->payloadClassToContentTypeMap[$payloadClass])) {
-            return $this->payloadClassToContentTypeMap[$payloadClass];
-        }
-
-        throw new \RuntimeException(
-            'Unable to find the content type of ' . $payloadClass
-        );
-    }
-
-    /**
-     * @param string $payloadClass
-     * @param string $contentType
-     * @return static
-     */
-    public function withContentType($payloadClass, $contentType)
-    {
-        // TODO: Pass in ContentTypeLookupInterface
-        $c = clone $this;
-        $c->setContentType($payloadClass, $contentType);
-        return $c;
-    }
-
-    /**
-     * @param string $payloadClass
-     * @param string $contentType
-     */
-    private function setContentType($payloadClass, $contentType)
-    {
-        if (!is_string($payloadClass)) {
-            throw new \InvalidArgumentException(
-                'Value for argument payloadClass should be a string'
-            );
-        }
-
-        if (!is_string($contentType)) {
-            throw new \InvalidArgumentException(
-                'Value for argument contentType should be a string'
-            );
-        }
-
-        if (isset($this->payloadClassToContentTypeMap[$payloadClass])) {
-            $currentContentType = $this->payloadClassToContentTypeMap[$payloadClass];
-            throw new \InvalidArgumentException(
-                'Content type for class ' . $payloadClass . ' was already set to ' . $currentContentType
-            );
-        }
-        $this->payloadClassToContentTypeMap[$payloadClass] = $contentType;
+        return $this->contentTypeLookup->getContentType($payloadClass);
     }
 }
