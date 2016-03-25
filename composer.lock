@@ -4,9 +4,59 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f206bede9e722e9676e503393896d467",
-    "content-hash": "49362eff125392fb8620b4af2938b6a3",
+    "hash": "b13fd3ad240f40f7a7d5b8f859d4f7a1",
+    "content-hash": "eaacd3fe98b79a13b5dbeda9a1bac4ba",
     "packages": [
+        {
+            "name": "2dotstwice/collection",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/2dotstwice/php-collection.git",
+                "reference": "d681e91e6441b68e6abad4f2634cda869cefafc9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/2dotstwice/php-collection/zipball/d681e91e6441b68e6abad4f2634cda869cefafc9",
+                "reference": "d681e91e6441b68e6abad4f2634cda869cefafc9",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "phing/phing": "~2.11",
+                "phpunit/php-token-stream": "1.4.6",
+                "phpunit/phpunit": "~4.8",
+                "satooshi/php-coveralls": "~0.7",
+                "squizlabs/php_codesniffer": "~2.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "TwoDotsTwice\\Collection\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Bert Ramakers",
+                    "email": "bert@2dotstwice.be",
+                    "homepage": "http://2dotstwice.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": " Library for creating collection classes with strict typing.",
+            "time": "2015-12-16 09:28:40"
+        },
         {
             "name": "beberlei/assert",
             "version": "v2.5",
