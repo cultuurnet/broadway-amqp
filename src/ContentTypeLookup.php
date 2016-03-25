@@ -15,9 +15,7 @@ class ContentTypeLookup implements ContentTypeLookupInterface
     }
 
     /**
-     * @param string $payloadClass
-     * @param string $contentType
-     * @return static
+     * @inheritdoc
      */
     public function withContentType($payloadClass, $contentType)
     {
@@ -54,8 +52,7 @@ class ContentTypeLookup implements ContentTypeLookupInterface
     }
 
     /**
-     * @param $payloadClass
-     * @return string
+     * @inheritdoc
      */
     public function getContentType($payloadClass)
     {

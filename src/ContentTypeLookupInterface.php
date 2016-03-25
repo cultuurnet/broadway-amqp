@@ -5,14 +5,14 @@ namespace CultuurNet\BroadwayAMQP;
 interface ContentTypeLookupInterface
 {
     /**
-     * @param $payloadClass
-     * @param $contentType
+     * @param string $payloadClass
+     * @param string $contentType
      * @return static
      */
     public function withContentType($payloadClass, $contentType);
 
     /**
-     * @param $payloadClass
+     * @param string $payloadClass
      * @return string
      */
     public function getContentType($payloadClass);
