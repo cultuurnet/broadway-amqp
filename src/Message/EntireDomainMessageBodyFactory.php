@@ -1,15 +1,10 @@
 <?php
-/**
- * @file
- */
 
 namespace CultuurNet\BroadwayAMQP\Message;
 
 use Broadway\Domain\DomainMessage;
 use Broadway\Serializer\SerializableInterface;
 use Broadway\Serializer\SerializationException;
-use Broadway\Serializer\SerializerInterface;
-use stdClass;
 
 class EntireDomainMessageBodyFactory implements BodyFactoryInterface
 {
