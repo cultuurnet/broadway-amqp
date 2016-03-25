@@ -5,6 +5,7 @@ namespace CultuurNet\BroadwayAMQP;
 use Broadway\Domain\DomainMessage;
 use Broadway\EventHandling\EventListenerInterface;
 use Broadway\Serializer\SerializableInterface;
+use CultuurNet\BroadwayAMQP\DomainMessage\SpecificationInterface;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
 use Psr\Log\LoggerAwareTrait;
