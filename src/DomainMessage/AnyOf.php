@@ -6,25 +6,17 @@
 namespace CultuurNet\BroadwayAMQP\DomainMessage;
 
 use Broadway\Domain\DomainMessage;
-use InvalidArgumentException;
+use CultuurNet\BroadwayAMQP\DomainMessage\SpecificationInterface;
 
 class AnyOf implements SpecificationInterface
 {
     /**
-     * @var SpecificationInterface[]
+     * @var SpecificationCollection|SpecificationInterface[]
      */
     private $specifications;
 
-    public function __construct()
+    public function __construct(SpecificationCollection $specifications)
     {
-        $specifications = func_get_args();
-
-        foreach ($specifications as $specification) {
-            if (!$specification instanceof SpecificationInterface) {
-                throw new InvalidArgumentException('Argument should implement '  . SpecificationInterface::class);
-            }
-        }
-
         $this->specifications = $specifications;
     }
 
