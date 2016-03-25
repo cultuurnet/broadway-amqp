@@ -5,7 +5,9 @@ namespace CultuurNet\BroadwayAMQP;
 use Broadway\Domain\DomainMessage;
 use Broadway\EventHandling\EventListenerInterface;
 use Broadway\Serializer\SerializableInterface;
+use Broadway\Serializer\SimpleInterfaceSerializer;
 use CultuurNet\BroadwayAMQP\DomainMessage\SpecificationInterface;
+use CultuurNet\BroadwayAMQP\Message\PayloadOnlyBodyFactory;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
 use Psr\Log\LoggerAwareTrait;
@@ -36,22 +38,34 @@ class AMQPPublisher implements EventListenerInterface
     private $contentTypeLookup;
 
     /**
+     * @var BodyFactoryInterface
+     */
+    private $bodyFactory;
+
+    /**
      * @param AMQPChannel $channel
      * @param $exchange
      * @param SpecificationInterface $domainMessageSpecification
      * @param ContentTypeLookupInterface $contentTypeLookup
+     * @param BodyFactoryInterface $bodyFactory
      */
     public function __construct(
         AMQPChannel $channel,
         $exchange,
         SpecificationInterface $domainMessageSpecification,
-        ContentTypeLookupInterface $contentTypeLookup
+        ContentTypeLookupInterface $contentTypeLookup,
+        BodyFactoryInterface $bodyFactory = null
     ) {
         $this->channel = $channel;
         $this->exchange = $exchange;
         $this->domainMessageSpecification = $domainMessageSpecification;
         $this->contentTypeLookup = $contentTypeLookup;
         $this->logger = new NullLogger();
+        
+        if (!$bodyFactory) {
+            $bodyFactory = new PayloadOnlyBodyFactory();
+        }
+        $this->bodyFactory = $bodyFactory;
     }
 
     /**
@@ -97,29 +111,10 @@ class AMQPPublisher implements EventListenerInterface
      */
     private function createAMQPMessage(DomainMessage $domainMessage)
     {
-        $body = $this->createAMQPBody($domainMessage);
+        $body = $this->bodyFactory->createBody($domainMessage);
         $properties = $this->createAMQPProperties($domainMessage);
 
         return new AMQPMessage($body, $properties);
-    }
-
-    /**
-     * @param DomainMessage $domainMessage
-     * @return string
-     */
-    private function createAMQPBody(DomainMessage $domainMessage)
-    {
-        $payload = $domainMessage->getPayload();
-
-        if ($payload instanceof SerializableInterface) {
-            return json_encode(
-                $payload->serialize()
-            );
-        }
-
-        throw new \RuntimeException(
-            'Unable to serialize ' . get_class($payload)
-        );
     }
 
     /**
