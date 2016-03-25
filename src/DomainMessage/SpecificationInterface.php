@@ -1,6 +1,6 @@
 <?php
 
-namespace CultuurNet\BroadwayAMQP;
+namespace CultuurNet\BroadwayAMQP\DomainMessage;
 
 use Broadway\Domain\DomainMessage;
 

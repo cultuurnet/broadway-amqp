@@ -3,7 +3,7 @@
 namespace CultuurNet\BroadwayAMQP\Dummies;
 
 use Broadway\Domain\DomainMessage;
-use CultuurNet\BroadwayAMQP\SpecificationInterface;
+use CultuurNet\BroadwayAMQP\DomainMessage\SpecificationInterface;
 
 class DummyNeverSatisfied implements SpecificationInterface
 {
