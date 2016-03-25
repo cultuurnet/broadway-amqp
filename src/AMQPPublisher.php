@@ -7,6 +7,7 @@ use Broadway\EventHandling\EventListenerInterface;
 use Broadway\Serializer\SerializableInterface;
 use Broadway\Serializer\SimpleInterfaceSerializer;
 use CultuurNet\BroadwayAMQP\DomainMessage\SpecificationInterface;
+use CultuurNet\BroadwayAMQP\Message\BodyFactoryInterface;
 use CultuurNet\BroadwayAMQP\Message\PayloadOnlyBodyFactory;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
