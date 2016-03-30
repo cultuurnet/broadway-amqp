@@ -237,14 +237,6 @@ class EventBusForwardingConsumerTest extends \PHPUnit_Framework_TestCase
             ->method('getDeserializerForContentType')
             ->with(new StringLiteral('application/vnd.cultuurnet.udb3-events.dummy-event+json'))
             ->willReturn($this->deserializer);
-        
-        $this->deserializer->expects($this->once())
-            ->method('deserialize')
-            ->with(new StringLiteral(''));
-
-        $this->channel->expects($this->once())
-            ->method('basic_ack')
-            ->with('my-delivery-tag');
 
         $messageProperties = [
             'content_type' => 'application/vnd.cultuurnet.udb3-events.dummy-event+json',
