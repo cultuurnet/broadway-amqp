@@ -158,9 +158,25 @@ class EventBusForwardingConsumerTest extends \PHPUnit_Framework_TestCase
             DateTime::now()
         );
 
+        $expectedMetadata = new Metadata($context);
+        $expectedPayload = 'test';
+
         $this->eventBus->expects($this->once())
             ->method('publish');
-            //->with(new DomainEventStream([$expectedDomainMessage]));
+//            ->with($this->callback(
+//                function ($domainEventStream) use ($expectedMetadata, $expectedPayload) {
+//                    $iterator = $domainEventStream->getIterator();
+//                    $domainMessage = $iterator->offsetGet(0);
+//                    $metadata = $domainMessage->getMetadata();
+//                    $payload = $domainMessage->getPayload();
+//                    var_dump($payload);
+//                    if ($metadata == $expectedMetadata && $payload == $expectedPayload) {
+//                        return true;
+//                    } else {
+//                        return false;
+//                    }
+//                }
+//            ));
 
         $this->deserializerLocator->expects($this->once())
             ->method('getDeserializerForContentType')
@@ -248,5 +264,91 @@ class EventBusForwardingConsumerTest extends \PHPUnit_Framework_TestCase
 
         $this->eventBusForwardingConsumer->consume($message);
 
+    }
+
+    /**
+     * @test
+     */
+    public function it_rejects_the_massage_when_an_error_occurs()
+    {
+        $context = [];
+        $context['correlation_id'] = new StringLiteral('my-correlation-id-123');
+
+        $this->deserializerLocator->expects($this->once())
+            ->method('getDeserializerForContentType')
+            ->with(new StringLiteral('application/vnd.cultuurnet.udb3-events.dummy-event+json'))
+            ->willThrowException(new \InvalidArgumentException('Deserializerlocator error'));
+
+        $this->channel->expects($this->once())
+            ->method('basic_reject')
+            ->with('my-delivery-tag');
+
+        $messageProperties = [
+            'content_type' => 'application/vnd.cultuurnet.udb3-events.dummy-event+json',
+            'correlation_id' => 'my-correlation-id-123'
+        ];
+
+        $messageBody = '';
+
+        $message = new AMQPMessage($messageBody, $messageProperties);
+        $message->delivery_info['channel'] = $this->channel;
+        $message->delivery_info['delivery_tag'] = 'my-delivery-tag';
+
+        $this->eventBusForwardingConsumer->consume($message);
+    }
+
+    /**
+     * @test
+     */
+    public function it_logs_messages_when_rejecting_a_message()
+    {
+        $context = [];
+        $context['correlation_id'] = new StringLiteral('my-correlation-id-123');
+
+        $this->logger
+            ->expects($this->at(0))
+            ->method('info')
+            ->with(
+                'received message with content-type application/vnd.cultuurnet.udb3-events.dummy-event+json',
+                $context
+            );
+
+        $this->logger
+            ->expects($this->at(1))
+            ->method('error')
+            ->with(
+                'Deserializerlocator error',
+                $context + ['exception' => new \InvalidArgumentException('Deserializerlocator error')]
+            );
+
+        $this->logger
+            ->expects($this->at(2))
+            ->method('info')
+            ->with(
+                'message rejected',
+                $context
+            );
+
+        $this->deserializerLocator->expects($this->once())
+            ->method('getDeserializerForContentType')
+            ->with(new StringLiteral('application/vnd.cultuurnet.udb3-events.dummy-event+json'))
+            ->willThrowException(new \InvalidArgumentException('Deserializerlocator error'));
+
+        $this->channel->expects($this->once())
+            ->method('basic_reject')
+            ->with('my-delivery-tag');
+
+        $messageProperties = [
+            'content_type' => 'application/vnd.cultuurnet.udb3-events.dummy-event+json',
+            'correlation_id' => 'my-correlation-id-123'
+        ];
+
+        $messageBody = '';
+
+        $message = new AMQPMessage($messageBody, $messageProperties);
+        $message->delivery_info['channel'] = $this->channel;
+        $message->delivery_info['delivery_tag'] = 'my-delivery-tag';
+
+        $this->eventBusForwardingConsumer->consume($message);
     }
 }
