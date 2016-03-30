@@ -151,35 +151,27 @@ class EventBusForwardingConsumerTest extends \PHPUnit_Framework_TestCase
     public function it_can_publish_the_message_on_the_event_bus()
     {
         $context = [];
-        $context['correlation_id'] = new StringLiteral('my-correlation-id-123');
-
-        $expectedDomainMessage = new DomainMessage(
-            '',
-            0,
-            new Metadata($context),
-            '',
-            DateTime::now()
-        );
+        $context['correlation_id'] = 'my-correlation-id-123';
 
         $expectedMetadata = new Metadata($context);
-        $expectedPayload = 'test';
+        $expectedPayload = '';
 
         $this->eventBus->expects($this->once())
-            ->method('publish');
-//            ->with($this->callback(
-//                function ($domainEventStream) use ($expectedMetadata, $expectedPayload) {
-//                    $iterator = $domainEventStream->getIterator();
-//                    $domainMessage = $iterator->offsetGet(0);
-//                    $metadata = $domainMessage->getMetadata();
-//                    $payload = $domainMessage->getPayload();
-//                    var_dump($payload);
-//                    if ($metadata == $expectedMetadata && $payload == $expectedPayload) {
-//                        return true;
-//                    } else {
-//                        return false;
-//                    }
-//                }
-//            ));
+            ->method('publish')
+            ->with($this->callback(
+                function ($domainEventStream) use ($expectedMetadata, $expectedPayload) {
+                    /** @var DomainEventStream $domainEventStream */
+                    $iterator = $domainEventStream->getIterator();
+                    $domainMessage = $iterator->offsetGet(0);
+                    $actualMetadata = $domainMessage->getMetadata();
+                    $actualPayload = $domainMessage->getPayload();
+                    if ($actualMetadata == $expectedMetadata && $actualPayload == $expectedPayload) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            ));
 
         $this->deserializerLocator->expects($this->once())
             ->method('getDeserializerForContentType')
