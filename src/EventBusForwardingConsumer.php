@@ -68,6 +68,11 @@ class EventBusForwardingConsumer implements LoggerAwareInterface
     /**
      * @param AMQPStreamConnection $connection
      * @param EventBusInterface $eventBus
+     * @param DeserializerLocatorInterface $deserializerLocator
+     * @param StringLiteral $consumerTag
+     * @param StringLiteral $exchangeName
+     * @param StringLiteral $queueName
+     * @param int $delay
      */
     public function __construct(
         AMQPStreamConnection $connection,
@@ -103,6 +108,9 @@ class EventBusForwardingConsumer implements LoggerAwareInterface
         }
     }
 
+    /**
+     * @param AMQPMessage $message
+     */
     public function consume(AMQPMessage $message)
     {
         $context = [];

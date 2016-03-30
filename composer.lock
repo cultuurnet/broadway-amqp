@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c409dd0128087eaa70e1cc719e093858",
-    "content-hash": "dd0ab6f6022ca6e7614c88d83c5a6cff",
+    "hash": "bd7de3dbc4f20bd6bdb3f23f27f2b7ed",
+    "content-hash": "723ed046535e8f1ed55a8892bcb09215",
     "packages": [
         {
             "name": "2dotstwice/collection",
@@ -259,16 +259,16 @@
         },
         {
             "name": "cultuurnet/deserializer",
-            "version": "dev-master",
+            "version": "dev-feature/III-844",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cultuurnet/deserializer.git",
-                "reference": "0269302e0c2630066d6a525b10412d429283f6d2"
+                "reference": "8935ab80635482107a99b5a441943ecf8af62401"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cultuurnet/deserializer/zipball/0269302e0c2630066d6a525b10412d429283f6d2",
-                "reference": "0269302e0c2630066d6a525b10412d429283f6d2",
+                "url": "https://api.github.com/repos/cultuurnet/deserializer/zipball/8935ab80635482107a99b5a441943ecf8af62401",
+                "reference": "8935ab80635482107a99b5a441943ecf8af62401",
                 "shasum": ""
             },
             "require": {
@@ -302,7 +302,7 @@
                 }
             ],
             "description": "Internet media type deserialization library",
-            "time": "2015-07-02 15:59:14"
+            "time": "2016-03-24 11:03:28"
         },
         {
             "name": "ircmaxell/password-compat",
@@ -2693,9 +2693,18 @@
             "time": "2016-02-23 15:16:06"
         }
     ],
-    "aliases": [],
+    "aliases": [
+        {
+            "alias": "0.1",
+            "alias_normalized": "0.1.0.0",
+            "version": "dev-feature/III-844",
+            "package": "cultuurnet/deserializer"
+        }
+    ],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "cultuurnet/deserializer": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": [],

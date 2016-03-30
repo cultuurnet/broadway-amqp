@@ -43,6 +43,11 @@ class EventBusForwardingConsumerFactory
 
     /**
      * EventBusForwardingConsumerFactory constructor.
+     * @param Natural $executionDelay
+     * @param $connectionConfig
+     * @param LoggerInterface $logger
+     * @param DeserializerLocatorInterface $deserializerLocator
+     * @param EventBusInterface $eventBus
      */
     public function __construct(
         Natural $executionDelay,
