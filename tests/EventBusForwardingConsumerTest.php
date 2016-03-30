@@ -2,19 +2,15 @@
 
 namespace CultuurNet\BroadwayAMQP;
 
-use Broadway\Domain\DateTime;
 use Broadway\Domain\DomainEventStream;
-use Broadway\Domain\DomainMessage;
 use Broadway\Domain\Metadata;
 use Broadway\EventHandling\EventBusInterface;
 use CultuurNet\Deserializer\DeserializerInterface;
 use CultuurNet\Deserializer\DeserializerLocatorInterface;
 use PhpAmqpLib\Channel\AbstractChannel;
-use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 use Psr\Log\LoggerInterface;
-use ValueObjects\Identity\UUID;
 use ValueObjects\String\String as StringLiteral;
 
 class EventBusForwardingConsumerTest extends \PHPUnit_Framework_TestCase
