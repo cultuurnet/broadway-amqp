@@ -1,12 +1,8 @@
 <?php
-/**
- * @file
- */
 
 namespace CultuurNet\BroadwayAMQP\DomainMessage;
 
 use Broadway\Domain\DomainMessage;
-use CultuurNet\BroadwayAMQP\DomainMessage\SpecificationInterface;
 
 class AnyOf implements SpecificationInterface
 {
