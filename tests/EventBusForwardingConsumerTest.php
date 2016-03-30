@@ -59,7 +59,7 @@ class EventBusForwardingConsumerTest extends \PHPUnit_Framework_TestCase
      *
      * @var int
      */
-    private $delay = 0;
+    private $delay;
 
     /**
      * @var EventBusForwardingConsumer
@@ -87,6 +87,8 @@ class EventBusForwardingConsumerTest extends \PHPUnit_Framework_TestCase
             false
         );
 
+        $this->delay = 1;
+
         $this->queueName = new StringLiteral('my-queue');
         $this->exchangeName = new StringLiteral('my-exchange');
         $this->consumerTag = new StringLiteral('my-tag');
@@ -109,7 +111,8 @@ class EventBusForwardingConsumerTest extends \PHPUnit_Framework_TestCase
             $this->deserializerLocator,
             $this->consumerTag,
             $this->exchangeName,
-            $this->queueName
+            $this->queueName,
+            $this->delay
         );
 
         /** @var LoggerInterface|\PHPUnit_Framework_MockObject_MockObject $logger */
