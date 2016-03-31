@@ -9,7 +9,7 @@
         "php-amqplib/php-amqplib": "2.5.*",
         "nicolopignatelli/valueobjects": "~2.0",
         "psr/log": "~1.0",
-        "cultuurnet/deserializer": "dev-feature/III-844 as 0.1",
+        "cultuurnet/deserializer": "~0.1",
         "2dotstwice/collection": "~1.1"
     },
     "require-dev": {
