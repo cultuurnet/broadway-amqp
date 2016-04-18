@@ -24,7 +24,7 @@ class EventBusForwardingConsumerFactory
     /**
      * @var AMQPStreamConnection
      */
-    protected $connectionConfig;
+    protected $connection;
 
     /**
      * @var LoggerInterface
@@ -42,25 +42,33 @@ class EventBusForwardingConsumerFactory
     protected $eventBus;
 
     /**
+     * @var StringLiteral
+     */
+    protected $consumerTag;
+
+    /**
      * EventBusForwardingConsumerFactory constructor.
      * @param Natural $executionDelay
      * @param AMQPStreamConnection $connection
      * @param LoggerInterface $logger
      * @param DeserializerLocatorInterface $deserializerLocator
      * @param EventBusInterface $eventBus
+     * @param StringLiteral $consumerTag
      */
     public function __construct(
         Natural $executionDelay,
         $connection,
         LoggerInterface $logger,
         DeserializerLocatorInterface $deserializerLocator,
-        EventBusInterface $eventBus
+        EventBusInterface $eventBus,
+        StringLiteral $consumerTag
     ) {
         $this->executionDelay = $executionDelay;
         $this->connection = $connection;
         $this->logger = $logger;
         $this->deserializerLocator = $deserializerLocator;
         $this->eventBus = $eventBus;
+        $this->consumerTag = $consumerTag;
     }
 
     /**
@@ -68,13 +76,15 @@ class EventBusForwardingConsumerFactory
      * @param StringLiteral $queue
      * @return EventBusForwardingConsumer
      */
-    public function create(StringLiteral $exchange, StringLiteral $queue)
-    {
+    public function create(
+        StringLiteral $exchange,
+        StringLiteral $queue
+    ) {
         $eventBusForwardingConsumer = new EventBusForwardingConsumer(
             $this->connection,
             $this->eventBus,
             $this->deserializerLocator,
-            new StringLiteral($this->connectionConfig['consumer_tag']),
+            $this->consumerTag,
             $exchange,
             $queue,
             $this->executionDelay->toNative()
