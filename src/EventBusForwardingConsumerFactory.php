@@ -57,7 +57,7 @@ class EventBusForwardingConsumerFactory
      */
     public function __construct(
         Natural $executionDelay,
-        $connection,
+        AMQPStreamConnection $connection,
         LoggerInterface $logger,
         DeserializerLocatorInterface $deserializerLocator,
         EventBusInterface $eventBus,

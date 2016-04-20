@@ -236,4 +236,12 @@ class EventBusForwardingConsumer implements LoggerAwareInterface
     {
         return $this->connection;
     }
+
+    /**
+     * @return AMQPChannel
+     */
+    public function getChannel()
+    {
+        return $this->channel;
+    }
 }
