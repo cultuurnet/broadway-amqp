@@ -20,8 +20,8 @@ class DomainMessageNormalizerDecorator extends AMQPPublisherDecorator
      */
     public function __construct(
         AMQPPublisherInterface $amqpPublisher,
-        DomainMessageNormalizerInterface $domainMessageNormalizer)
-    {
+        DomainMessageNormalizerInterface $domainMessageNormalizer
+    ) {
         parent::__construct($amqpPublisher);
         
         $this->domainMessageNormalizer = $domainMessageNormalizer;
