@@ -22,9 +22,9 @@ class EventBusForwardingConsumerFactory
     protected $executionDelay;
 
     /**
-     * @var array
+     * @var AMQPStreamConnection
      */
-    protected $connectionConfig;
+    protected $connection;
 
     /**
      * @var LoggerInterface
@@ -42,25 +42,33 @@ class EventBusForwardingConsumerFactory
     protected $eventBus;
 
     /**
+     * @var StringLiteral
+     */
+    protected $consumerTag;
+
+    /**
      * EventBusForwardingConsumerFactory constructor.
      * @param Natural $executionDelay
-     * @param $connectionConfig
+     * @param AMQPStreamConnection $connection
      * @param LoggerInterface $logger
      * @param DeserializerLocatorInterface $deserializerLocator
      * @param EventBusInterface $eventBus
+     * @param StringLiteral $consumerTag
      */
     public function __construct(
         Natural $executionDelay,
-        $connectionConfig,
+        AMQPStreamConnection $connection,
         LoggerInterface $logger,
         DeserializerLocatorInterface $deserializerLocator,
-        EventBusInterface $eventBus
+        EventBusInterface $eventBus,
+        StringLiteral $consumerTag
     ) {
         $this->executionDelay = $executionDelay;
-        $this->connectionConfig = $connectionConfig;
+        $this->connection = $connection;
         $this->logger = $logger;
         $this->deserializerLocator = $deserializerLocator;
         $this->eventBus = $eventBus;
+        $this->consumerTag = $consumerTag;
     }
 
     /**
@@ -68,21 +76,15 @@ class EventBusForwardingConsumerFactory
      * @param StringLiteral $queue
      * @return EventBusForwardingConsumer
      */
-    public function create(StringLiteral $exchange, StringLiteral $queue)
-    {
-        $connection = new AMQPStreamConnection(
-            $this->connectionConfig['host'],
-            $this->connectionConfig['port'],
-            $this->connectionConfig['user'],
-            $this->connectionConfig['password'],
-            $this->connectionConfig['vhost']
-        );
-        
+    public function create(
+        StringLiteral $exchange,
+        StringLiteral $queue
+    ) {
         $eventBusForwardingConsumer = new EventBusForwardingConsumer(
-            $connection,
+            $this->connection,
             $this->eventBus,
             $this->deserializerLocator,
-            new StringLiteral($this->connectionConfig['consumer_tag']),
+            $this->consumerTag,
             $exchange,
             $queue,
             $this->executionDelay->toNative()
