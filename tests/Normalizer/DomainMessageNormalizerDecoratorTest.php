@@ -3,9 +3,9 @@
 namespace CultuurNet\BroadwayAMQP\Normalizer;
 use Broadway\Domain\DomainMessage;
 use Broadway\Domain\Metadata;
+use Broadway\Domain\DateTime as BroadwayDateTime;
 use CultuurNet\BroadwayAMQP\Dummies\DummyEvent;
 use Broadway\EventHandling\EventListenerInterface as AMQPPublisherInterface;
-use Broadway\Domain\DateTime as BroadwayDateTime;
 
 /**
  * Class DomainMessageNormalizerDecoratorTest
