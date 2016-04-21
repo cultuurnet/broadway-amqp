@@ -1,10 +1,10 @@
 <?php
 
-namespace CultuurNet\BroadwayAMQP;
+namespace CultuurNet\BroadwayAMQP\Normalizer;
 
 use Broadway\Domain\DomainMessage;
 use Broadway\EventHandling\EventListenerInterface as AMQPPublisherInterface;
-use CultuurNet\BroadwayAMQP\Normalizer\DomainMessageNormalizerInterface;
+use CultuurNet\BroadwayAMQP\AMQPPublisherDecorator;
 
 class DomainMessageNormalizerDecorator extends AMQPPublisherDecorator
 {
