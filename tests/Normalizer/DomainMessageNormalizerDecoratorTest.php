@@ -1,6 +1,8 @@
 <?php
 
 namespace CultuurNet\BroadwayAMQP\Normalizer;
+
+use Broadway\Domain\DomainEventStream;
 use Broadway\Domain\DomainMessage;
 use Broadway\Domain\Metadata;
 use Broadway\Domain\DateTime as BroadwayDateTime;
@@ -14,17 +16,17 @@ use Broadway\EventHandling\EventListenerInterface as AMQPPublisherInterface;
 class DomainMessageNormalizerDecoratorTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var DomainMessageNormalizerDecorator
+     * @var DomainMessageNormalizerDecorator|\PHPUnit_Framework_MockObject_MockObject
      */
     private $domainMessageNormalizerDecorator;
     
     /**
-     * @var AMQPPublisherInterface
+     * @var AMQPPublisherInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $amqpPublisher;
     
     /**
-     * @var DomainMessageNormalizerInterface
+     * @var DomainMessageNormalizerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $domainMessageNormalizer;
 
@@ -35,13 +37,17 @@ class DomainMessageNormalizerDecoratorTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->amqpPublisher = $this->getMockBuilder(AMQPPublisherInterface::class)
-                                    ->getMock();
-        $this->domainMessageNormalizer = $this->getMock(DomainMessageNormalizerInterface::class);
+        $this->amqpPublisher = $this->getMock(AMQPPublisherInterface::class);
+
+        $this->domainMessageNormalizer = $this->getMock(
+            DomainMessageNormalizerInterface::class
+        );
+
         $this->domainMessageNormalizerDecorator = new DomainMessageNormalizerDecorator(
-            $this->amqpPublisher, 
+            $this->amqpPublisher,
             $this->domainMessageNormalizer
         );
+
         $this->domainMessage = new DomainMessage(
             'F68E71A1-DBB0-4542-AEE5-BD937E095F74',
             2,
@@ -57,12 +63,12 @@ class DomainMessageNormalizerDecoratorTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_does_use_the_normalize_method()
+    public function it_does_call_the_normalize_method()
     {
         $this->domainMessageNormalizer->expects($this->once())
              ->method('normalize')
-             ->will($this->returnValue(new \ArrayIterator([$this->domainMessage])));
-        
+             ->will($this->returnValue(new DomainEventStream([$this->domainMessage])));
+
         $this->domainMessageNormalizerDecorator->handle($this->domainMessage);
     }
     
@@ -74,7 +80,7 @@ class DomainMessageNormalizerDecoratorTest extends \PHPUnit_Framework_TestCase
         $this->domainMessageNormalizer->expects($this->once())
             ->method('normalize')
             ->will($this->returnValue(
-                new \ArrayIterator([
+                new DomainEventStream([
                     $this->domainMessage,
                     $this->domainMessage
                 ])
