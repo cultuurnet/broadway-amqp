@@ -7,6 +7,12 @@ use Broadway\Domain\DomainMessage;
 
 interface DomainMessageNormalizerInterface
 {
+
+    /**
+     * @return array
+     */
+    public function getSupportedEvents();
+
     /**
      * @param DomainMessage $domainMessage
      * @return DomainEventStreamInterface

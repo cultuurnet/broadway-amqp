@@ -13,12 +13,12 @@ use Broadway\EventHandling\EventListenerInterface as AMQPPublisherInterface;
  * Class DomainMessageNormalizerDecoratorTest
  * @package CultuurNet\BroadwayAMQP\Normalizer
  */
-class DomainMessageNormalizerDecoratorTest extends \PHPUnit_Framework_TestCase
+class DomainMessageNormalizerAMQPPublisherDecoratorTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var DomainMessageNormalizerDecorator|\PHPUnit_Framework_MockObject_MockObject
+     * @var DomainMessageNormalizerAMQPPublisherDecorator|\PHPUnit_Framework_MockObject_MockObject
      */
-    private $domainMessageNormalizerDecorator;
+    private $domainMessageNormalizerAMQPPublisherDecorator;
     
     /**
      * @var AMQPPublisherInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -43,7 +43,7 @@ class DomainMessageNormalizerDecoratorTest extends \PHPUnit_Framework_TestCase
             DomainMessageNormalizerInterface::class
         );
 
-        $this->domainMessageNormalizerDecorator = new DomainMessageNormalizerDecorator(
+        $this->domainMessageNormalizerAMQPPublisherDecorator = new DomainMessageNormalizerAMQPPublisherDecorator(
             $this->amqpPublisher,
             $this->domainMessageNormalizer
         );
@@ -69,7 +69,7 @@ class DomainMessageNormalizerDecoratorTest extends \PHPUnit_Framework_TestCase
              ->method('normalize')
              ->will($this->returnValue(new DomainEventStream([$this->domainMessage])));
 
-        $this->domainMessageNormalizerDecorator->handle($this->domainMessage);
+        $this->domainMessageNormalizerAMQPPublisherDecorator->handle($this->domainMessage);
     }
     
     /**
@@ -88,6 +88,6 @@ class DomainMessageNormalizerDecoratorTest extends \PHPUnit_Framework_TestCase
 
         $this->amqpPublisher->expects($this->exactly(2))->method('handle');
 
-        $this->domainMessageNormalizerDecorator->handle($this->domainMessage);
+        $this->domainMessageNormalizerAMQPPublisherDecorator->handle($this->domainMessage);
     }
 }

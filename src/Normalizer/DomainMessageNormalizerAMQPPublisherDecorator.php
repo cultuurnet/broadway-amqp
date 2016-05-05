@@ -6,7 +6,7 @@ use Broadway\Domain\DomainMessage;
 use Broadway\EventHandling\EventListenerInterface as AMQPPublisherInterface;
 use CultuurNet\BroadwayAMQP\AMQPPublisherDecorator;
 
-class DomainMessageNormalizerDecorator extends AMQPPublisherDecorator
+class DomainMessageNormalizerAMQPPublisherDecorator extends AMQPPublisherDecorator
 {
     /**
      * @var DomainMessageNormalizerInterface
