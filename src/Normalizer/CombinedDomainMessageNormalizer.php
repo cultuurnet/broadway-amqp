@@ -40,7 +40,7 @@ class CombinedDomainMessageNormalizer implements DomainMessageNormalizerInterfac
      */
     public function getSupportedEvents()
     {
-        return array();
+        return array_keys($this->normalizers);
     }
 
     /**
@@ -48,14 +48,14 @@ class CombinedDomainMessageNormalizer implements DomainMessageNormalizerInterfac
      */
     public function normalize(DomainMessage $domainMessage)
     {
-
         $payloadType = get_class($domainMessage->getPayload());
 
         if (isset($this->normalizers[$payloadType])) {
-            return $this->normalizers[$payloadType]->normalize($domainMessage);
+            /* @var DomainMessageNormalizerInterface $normalizer */
+            $normalizer = $this->normalizers[$payloadType];
+            return $normalizer->normalize($domainMessage);
         }
 
         return new DomainEventStream(array($domainMessage));
-
     }
 }
