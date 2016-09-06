@@ -6,6 +6,8 @@ use Broadway\Domain\DateTime;
 use Broadway\Domain\DomainMessage;
 use Broadway\Domain\Metadata;
 use CultuurNet\BroadwayAMQP\Dummies\DummyEvent;
+use CultuurNet\BroadwayAMQP\Message\Body\BodyFactoryInterface;
+use CultuurNet\BroadwayAMQP\Message\Properties\PropertiesFactoryInterface;
 use PhpAmqpLib\Message\AMQPMessage;
 
 class DelegatingAMQPMessageFactoryTest extends \PHPUnit_Framework_TestCase

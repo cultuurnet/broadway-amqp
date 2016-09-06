@@ -1,6 +1,6 @@
 <?php
 
-namespace CultuurNet\BroadwayAMQP\Message;
+namespace CultuurNet\BroadwayAMQP\Message\Properties;
 
 use Broadway\Domain\DateTime;
 use Broadway\Domain\DomainMessage;

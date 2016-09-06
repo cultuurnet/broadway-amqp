@@ -1,11 +1,10 @@
 <?php
 
-namespace CultuurNet\BroadwayAMQP\Message;
+namespace CultuurNet\BroadwayAMQP\Message\Properties;
 
 use Broadway\Domain\DateTime;
 use Broadway\Domain\DomainMessage;
 use Broadway\Domain\Metadata;
-use PhpAmqpLib\Message\AMQPMessage;
 
 class CompositePropertiesFactoryTest extends \PHPUnit_Framework_TestCase
 {

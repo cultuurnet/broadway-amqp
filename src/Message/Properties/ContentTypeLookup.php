@@ -1,6 +1,6 @@
 <?php
 
-namespace CultuurNet\BroadwayAMQP\Message;
+namespace CultuurNet\BroadwayAMQP\Message\Properties;
 
 class ContentTypeLookup implements ContentTypeLookupInterface
 {

@@ -3,6 +3,8 @@
 namespace CultuurNet\BroadwayAMQP\Message;
 
 use Broadway\Domain\DomainMessage;
+use CultuurNet\BroadwayAMQP\Message\Body\BodyFactoryInterface;
+use CultuurNet\BroadwayAMQP\Message\Properties\PropertiesFactoryInterface;
 use PhpAmqpLib\Message\AMQPMessage;
 
 class DelegatingAMQPMessageFactory implements AMQPMessageFactoryInterface
