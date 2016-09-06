@@ -7,6 +7,7 @@ use Broadway\EventHandling\EventListenerInterface;
 use CultuurNet\BroadwayAMQP\DomainMessage\SpecificationInterface;
 use CultuurNet\BroadwayAMQP\Message\BodyFactoryInterface;
 use CultuurNet\BroadwayAMQP\Message\PayloadOnlyBodyFactory;
+use CultuurNet\BroadwayAMQP\Message\PropertiesFactoryInterface;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
 use Psr\Log\LoggerAwareTrait;
@@ -32,9 +33,9 @@ class AMQPPublisher implements EventListenerInterface
     private $channel;
 
     /**
-     * @var ContentTypeLookup
+     * @var PropertiesFactoryInterface
      */
-    private $contentTypeLookup;
+    private $propertiesFactory;
 
     /**
      * @var BodyFactoryInterface
@@ -45,22 +46,22 @@ class AMQPPublisher implements EventListenerInterface
      * @param AMQPChannel $channel
      * @param $exchange
      * @param SpecificationInterface $domainMessageSpecification
-     * @param ContentTypeLookupInterface $contentTypeLookup
+     * @param PropertiesFactoryInterface $propertiesFactory
      * @param BodyFactoryInterface $bodyFactory
      */
     public function __construct(
         AMQPChannel $channel,
         $exchange,
         SpecificationInterface $domainMessageSpecification,
-        ContentTypeLookupInterface $contentTypeLookup,
+        PropertiesFactoryInterface $propertiesFactory,
         BodyFactoryInterface $bodyFactory = null
     ) {
         $this->channel = $channel;
         $this->exchange = $exchange;
         $this->domainMessageSpecification = $domainMessageSpecification;
-        $this->contentTypeLookup = $contentTypeLookup;
         $this->logger = new NullLogger();
-        
+        $this->propertiesFactory = $propertiesFactory;
+
         if (!$bodyFactory) {
             $bodyFactory = new PayloadOnlyBodyFactory();
         }
@@ -69,16 +70,14 @@ class AMQPPublisher implements EventListenerInterface
 
     /**
      * @inheritdoc
-     * @throws \RuntimeException
      */
     public function handle(DomainMessage $domainMessage)
     {
         if ($this->domainMessageSpecification->isSatisfiedBy($domainMessage)) {
             $this->publishWithAMQP($domainMessage);
-            return;
+        } else {
+            $this->logger->warning('message was skipped by specification ' . get_class($this->domainMessageSpecification));
         }
-
-        $this->logger->warning('message was skipped by specification ' . get_class($this->domainMessageSpecification));
     }
 
     /**
@@ -86,68 +85,16 @@ class AMQPPublisher implements EventListenerInterface
      */
     private function publishWithAMQP(DomainMessage $domainMessage)
     {
-        $key = null;
-
-        $message = $this->createAMQPMessage($domainMessage);
-
         $payload = $domainMessage->getPayload();
         $eventClass = get_class($payload);
-
-        $this->logger->info(
-            'publishing message with event type ' . $eventClass . ' to exchange ' . $this->exchange
-        );
+        $this->logger->info("publishing message with event type {$eventClass} to exchange {$this->exchange}");
 
         $this->channel->basic_publish(
-            $message,
-            $this->exchange,
-            $key
+            new AMQPMessage(
+                $this->bodyFactory->createBody($domainMessage),
+                $this->propertiesFactory->createProperties($domainMessage)
+            ),
+            $this->exchange
         );
-    }
-
-    /**
-     * @param DomainMessage $domainMessage
-     * @return AMQPMessage
-     */
-    private function createAMQPMessage(DomainMessage $domainMessage)
-    {
-        $body = $this->bodyFactory->createBody($domainMessage);
-        $properties = $this->createAMQPProperties($domainMessage);
-
-        return new AMQPMessage($body, $properties);
-    }
-
-    /**
-     * @param DomainMessage $domainMessage
-     * @return array
-     */
-    private function createAMQPProperties(DomainMessage $domainMessage)
-    {
-        $properties = [];
-
-        $properties['content_type'] = $this->getContentType($domainMessage);
-        $properties['correlation_id'] = $this->getCorrelationId($domainMessage);
-
-        return $properties;
-    }
-
-    /**
-     * @param DomainMessage $domainMessage
-     * @return string
-     */
-    private function getCorrelationId(DomainMessage $domainMessage)
-    {
-        return $domainMessage->getId() . '-' . $domainMessage->getPlayhead();
-    }
-
-    /**
-     * @param DomainMessage $domainMessage
-     * @return string
-     */
-    private function getContentType(DomainMessage $domainMessage)
-    {
-        $payload = $domainMessage->getPayload();
-        $payloadClass = get_class($payload);
-
-        return $this->contentTypeLookup->getContentType($payloadClass);
     }
 }
