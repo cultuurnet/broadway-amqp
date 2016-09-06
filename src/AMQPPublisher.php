@@ -5,11 +5,8 @@ namespace CultuurNet\BroadwayAMQP;
 use Broadway\Domain\DomainMessage;
 use Broadway\EventHandling\EventListenerInterface;
 use CultuurNet\BroadwayAMQP\DomainMessage\SpecificationInterface;
-use CultuurNet\BroadwayAMQP\Message\BodyFactoryInterface;
-use CultuurNet\BroadwayAMQP\Message\PayloadOnlyBodyFactory;
-use CultuurNet\BroadwayAMQP\Message\PropertiesFactoryInterface;
+use CultuurNet\BroadwayAMQP\Message\AMQPMessageFactoryInterface;
 use PhpAmqpLib\Channel\AMQPChannel;
-use PhpAmqpLib\Message\AMQPMessage;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\NullLogger;
 
@@ -33,39 +30,27 @@ class AMQPPublisher implements EventListenerInterface
     private $channel;
 
     /**
-     * @var PropertiesFactoryInterface
+     * @var AMQPMessageFactoryInterface
      */
-    private $propertiesFactory;
-
-    /**
-     * @var BodyFactoryInterface
-     */
-    private $bodyFactory;
+    private $messageFactory;
 
     /**
      * @param AMQPChannel $channel
      * @param $exchange
      * @param SpecificationInterface $domainMessageSpecification
-     * @param PropertiesFactoryInterface $propertiesFactory
-     * @param BodyFactoryInterface $bodyFactory
+     * @param AMQPMessageFactoryInterface $messageFactory
      */
     public function __construct(
         AMQPChannel $channel,
         $exchange,
         SpecificationInterface $domainMessageSpecification,
-        PropertiesFactoryInterface $propertiesFactory,
-        BodyFactoryInterface $bodyFactory = null
+        AMQPMessageFactoryInterface $messageFactory
     ) {
         $this->channel = $channel;
         $this->exchange = $exchange;
         $this->domainMessageSpecification = $domainMessageSpecification;
+        $this->messageFactory = $messageFactory;
         $this->logger = new NullLogger();
-        $this->propertiesFactory = $propertiesFactory;
-
-        if (!$bodyFactory) {
-            $bodyFactory = new PayloadOnlyBodyFactory();
-        }
-        $this->bodyFactory = $bodyFactory;
     }
 
     /**
@@ -90,10 +75,7 @@ class AMQPPublisher implements EventListenerInterface
         $this->logger->info("publishing message with event type {$eventClass} to exchange {$this->exchange}");
 
         $this->channel->basic_publish(
-            new AMQPMessage(
-                $this->bodyFactory->createBody($domainMessage),
-                $this->propertiesFactory->createProperties($domainMessage)
-            ),
+            $this->messageFactory->createAMQPMessage($domainMessage),
             $this->exchange
         );
     }

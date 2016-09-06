@@ -15,6 +15,8 @@ use CultuurNet\BroadwayAMQP\Message\ContentTypeLookup;
 use CultuurNet\BroadwayAMQP\Message\ContentTypeLookupInterface;
 use CultuurNet\BroadwayAMQP\Message\ContentTypePropertiesFactory;
 use CultuurNet\BroadwayAMQP\Message\CorrelationIdPropertiesFactory;
+use CultuurNet\BroadwayAMQP\Message\DelegatingAMQPMessageFactory;
+use CultuurNet\BroadwayAMQP\Message\PayloadOnlyBodyFactory;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
 use Psr\Log\LoggerInterface;
@@ -46,9 +48,9 @@ class AMQPPublisherTest extends \PHPUnit_Framework_TestCase
     private $domainMessage;
 
     /**
-     * @var CorrelationIdPropertiesFactory
+     * @var DelegatingAMQPMessageFactory
      */
-    private $propertiesFactory;
+    private $messageFactory;
 
     protected function setUp()
     {
@@ -62,13 +64,16 @@ class AMQPPublisherTest extends \PHPUnit_Framework_TestCase
 
         $this->specification = $this->getMock(SpecificationInterface::class);
 
-        $this->propertiesFactory = new CorrelationIdPropertiesFactory();
+        $this->messageFactory = new DelegatingAMQPMessageFactory(
+            new PayloadOnlyBodyFactory(),
+            new CorrelationIdPropertiesFactory()
+        );
 
         $this->amqpPublisher = new AMQPPublisher(
             $this->amqpChannel,
             null,
             $this->specification,
-            $this->propertiesFactory
+            $this->messageFactory
         );
 
         $this->domainMessage = new DomainMessage(
