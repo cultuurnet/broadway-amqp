@@ -204,7 +204,7 @@ class EventBusForwardingConsumerTest extends \PHPUnit_Framework_TestCase
     {
         $context = [];
         $context['correlation_id'] = new StringLiteral('my-correlation-id-123');
-        
+
         $this->logger
             ->expects($this->at(0))
             ->method('info')
@@ -220,7 +220,7 @@ class EventBusForwardingConsumerTest extends \PHPUnit_Framework_TestCase
                 'passing on message to event bus',
                 $context
             );
-        
+
         $this->logger
             ->expects($this->at(2))
             ->method('info')
@@ -246,7 +246,6 @@ class EventBusForwardingConsumerTest extends \PHPUnit_Framework_TestCase
         $message->delivery_info['delivery_tag'] = 'my-delivery-tag';
 
         $this->eventBusForwardingConsumer->consume($message);
-
     }
 
     /**

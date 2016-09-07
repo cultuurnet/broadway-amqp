@@ -61,7 +61,9 @@ class AMQPPublisher implements EventListenerInterface
         if ($this->domainMessageSpecification->isSatisfiedBy($domainMessage)) {
             $this->publishWithAMQP($domainMessage);
         } else {
-            $this->logger->warning('message was skipped by specification ' . get_class($this->domainMessageSpecification));
+            $this->logger->warning(
+                'message was skipped by specification ' . get_class($this->domainMessageSpecification)
+            );
         }
     }
 

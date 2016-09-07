@@ -163,7 +163,6 @@ class EventBusForwardingConsumer implements LoggerAwareInterface
             $this->eventBus->publish(
                 new DomainEventStream([$domainMessage])
             );
-
         } catch (\Exception $e) {
             if ($this->logger) {
                 $this->logger->error(
