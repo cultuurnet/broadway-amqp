@@ -18,14 +18,7 @@ class DeliveryModePropertiesFactory implements PropertiesFactoryInterface
      */
     public function __construct($deliveryMode)
     {
-        $validModes = [
-            AMQPMessage::DELIVERY_MODE_NON_PERSISTENT,
-            AMQPMessage::DELIVERY_MODE_PERSISTENT,
-        ];
-
-        if (!in_array($deliveryMode, $validModes)) {
-            throw new \InvalidArgumentException("Invalid amqp delivery mode {$deliveryMode}.");
-        }
+        $this->guardDeliveryMode($deliveryMode);
 
         $this->deliveryMode = $deliveryMode;
     }
@@ -37,5 +30,21 @@ class DeliveryModePropertiesFactory implements PropertiesFactoryInterface
     public function createProperties(DomainMessage $domainMessage)
     {
         return ['delivery_mode' => $this->deliveryMode];
+    }
+
+    /**
+     * @param $deliveryMode
+     * @throws \InvalidArgumentException
+     */
+    private function guardDeliveryMode($deliveryMode)
+    {
+        $validModes = [
+            AMQPMessage::DELIVERY_MODE_NON_PERSISTENT,
+            AMQPMessage::DELIVERY_MODE_PERSISTENT,
+        ];
+
+        if (!in_array($deliveryMode, $validModes)) {
+            throw new \InvalidArgumentException("Invalid amqp delivery mode {$deliveryMode}.");
+        }
     }
 }
