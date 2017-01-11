@@ -9,7 +9,7 @@ class SpecificationCollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function it_does_accept_objects_of_type_specification_class()
     {
-        $specification = $this->getMock(SpecificationInterface::class);
+        $specification = $this->createMock(SpecificationInterface::class);
 
         $specifications = new SpecificationCollection();
         $specifications = $specifications->with($specification);
@@ -22,7 +22,7 @@ class SpecificationCollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function it_does_accept_objects_of_subclass_type_specification()
     {
-        $payloadSpecification = $this->getMock(
+        $payloadSpecification = $this->createMock(
             PayloadIsInstanceOf::class,
             array(),
             array('typeName')
@@ -39,7 +39,7 @@ class SpecificationCollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function it_does_throws_invalid_argument_exception_for_wrong_types()
     {
-        $wrongSpecification = $this->getMock(\JsonSerializable::class);
+        $wrongSpecification = $this->createMock(\JsonSerializable::class);
 
         $message = sprintf(
             'Expected instance of %s, found %s instead.',

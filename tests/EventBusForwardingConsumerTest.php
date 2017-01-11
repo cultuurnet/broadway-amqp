@@ -8,6 +8,7 @@ use Broadway\EventHandling\EventBusInterface;
 use CultuurNet\Deserializer\DeserializerInterface;
 use CultuurNet\Deserializer\DeserializerLocatorInterface;
 use PhpAmqpLib\Channel\AbstractChannel;
+use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 use Psr\Log\LoggerInterface;
@@ -75,7 +76,7 @@ class EventBusForwardingConsumerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->connection = $this->getMock(
+        $this->connection = $this->createMock(
             AMQPStreamConnection::class,
             array(),
             array(),
@@ -88,14 +89,12 @@ class EventBusForwardingConsumerTest extends \PHPUnit_Framework_TestCase
         $this->queueName = new StringLiteral('my-queue');
         $this->exchangeName = new StringLiteral('my-exchange');
         $this->consumerTag = new StringLiteral('my-tag');
-        $this->eventBus = $this->getMock(EventBusInterface::class);
-        $this->deserializerLocator = $this->getMock(DeserializerLocatorInterface::class);
-        $this->channel = $this->getMockForAbstractClass(
-            AbstractChannel::class,
-            array(),
-            'AMQPChannel',
-            false
-        );
+        $this->eventBus = $this->createMock(EventBusInterface::class);
+        $this->deserializerLocator = $this->createMock(DeserializerLocatorInterface::class);
+        $this->channel = $this->getMockBuilder(AMQPChannel::class)
+            ->disableOriginalConstructor()
+            ->disableProxyingToOriginalMethods()
+            ->getMock();
 
         $this->connection->expects($this->any())
             ->method('channel')
@@ -112,10 +111,10 @@ class EventBusForwardingConsumerTest extends \PHPUnit_Framework_TestCase
         );
 
         /** @var LoggerInterface|\PHPUnit_Framework_MockObject_MockObject $logger */
-        $this->logger = $this->getMock(LoggerInterface::class);
+        $this->logger = $this->createMock(LoggerInterface::class);
         $this->eventBusForwardingConsumer->setLogger($this->logger);
 
-        $this->deserializer = $this->getMock(DeserializerInterface::class);
+        $this->deserializer = $this->createMock(DeserializerInterface::class);
     }
 
     /**
