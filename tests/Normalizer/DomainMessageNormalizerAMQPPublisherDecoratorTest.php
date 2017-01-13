@@ -37,9 +37,9 @@ class DomainMessageNormalizerAMQPPublisherDecoratorTest extends \PHPUnit_Framewo
 
     protected function setUp()
     {
-        $this->amqpPublisher = $this->getMock(AMQPPublisherInterface::class);
+        $this->amqpPublisher = $this->createMock(AMQPPublisherInterface::class);
 
-        $this->domainMessageNormalizer = $this->getMock(
+        $this->domainMessageNormalizer = $this->createMock(
             DomainMessageNormalizerInterface::class
         );
 

@@ -33,12 +33,12 @@ class CombinedDomainMessageNormalizerTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->dummyNormalizer = $this->getMock(DomainMessageNormalizerInterface::class);
+        $this->dummyNormalizer = $this->createMock(DomainMessageNormalizerInterface::class);
         $this->dummyNormalizer->expects($this->any())
             ->method('getSupportedEvents')
             ->willReturn(array(DummyEvent::class));
 
-        $this->dummyChildNormalizer = $this->getMock(DomainMessageNormalizerInterface::class);
+        $this->dummyChildNormalizer = $this->createMock(DomainMessageNormalizerInterface::class);
         $this->dummyChildNormalizer->expects($this->any())
             ->method('getSupportedEvents')
             ->willReturn(array(DummyEventSubclass::class));

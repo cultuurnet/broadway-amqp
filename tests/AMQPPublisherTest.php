@@ -48,15 +48,9 @@ class AMQPPublisherTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->amqpChannel = $this->getMock(
-            AMQPChannel::class,
-            array(),
-            array(),
-            "AMQPChannel",
-            false
-        );
+        $this->amqpChannel = $this->createMock(AMQPChannel::class);
 
-        $this->specification = $this->getMock(SpecificationInterface::class);
+        $this->specification = $this->createMock(SpecificationInterface::class);
 
         $this->messageFactory = new DelegatingAMQPMessageFactory(
             new PayloadOnlyBodyFactory(),
@@ -148,7 +142,7 @@ class AMQPPublisherTest extends \PHPUnit_Framework_TestCase
         $this->expectSpecificationIsSatisfied();
 
         /** @var LoggerInterface|\PHPUnit_Framework_MockObject_MockObject $logger */
-        $logger = $this->getMock(LoggerInterface::class);
+        $logger = $this->createMock(LoggerInterface::class);
         $this->amqpPublisher->setLogger($logger);
 
         $logger
@@ -169,7 +163,7 @@ class AMQPPublisherTest extends \PHPUnit_Framework_TestCase
         $this->expectSpecificationIsNotSatisfied();
 
         /** @var LoggerInterface|\PHPUnit_Framework_MockObject_MockObject $logger */
-        $logger = $this->getMock(LoggerInterface::class);
+        $logger = $this->createMock(LoggerInterface::class);
         $this->amqpPublisher->setLogger($logger);
 
         $logger

@@ -28,7 +28,7 @@ class AMQPPublisherDecoratorTest extends \PHPUnit_Framework_TestCase
     
     protected function setUp()
     {
-        $this->amqpPublisher = $this->getMock(AMQPPublisherInterface::class);
+        $this->amqpPublisher = $this->createMock(AMQPPublisherInterface::class);
 
         $this->amqpPublisherDecorator = $this->getMockForAbstractClass(
             AMQPPublisherDecorator::class,

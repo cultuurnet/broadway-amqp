@@ -25,8 +25,8 @@ class CompositePropertiesFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->mockFactory1 = $this->getMock(PropertiesFactoryInterface::class);
-        $this->mockFactory2 = $this->getMock(PropertiesFactoryInterface::class);
+        $this->mockFactory1 = $this->createMock(PropertiesFactoryInterface::class);
+        $this->mockFactory2 = $this->createMock(PropertiesFactoryInterface::class);
 
         $this->compositeFactory = (new CompositePropertiesFactory())
             ->with($this->mockFactory1)

@@ -29,8 +29,8 @@ class DelegatingAMQPMessageFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->bodyFactory = $this->getMock(BodyFactoryInterface::class);
-        $this->propertiesFactory = $this->getMock(PropertiesFactoryInterface::class);
+        $this->bodyFactory = $this->createMock(BodyFactoryInterface::class);
+        $this->propertiesFactory = $this->createMock(PropertiesFactoryInterface::class);
 
         $this->messageFactory = new DelegatingAMQPMessageFactory(
             $this->bodyFactory,
