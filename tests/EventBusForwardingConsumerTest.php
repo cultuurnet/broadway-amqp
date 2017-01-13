@@ -76,13 +76,7 @@ class EventBusForwardingConsumerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->connection = $this->createMock(
-            AMQPStreamConnection::class,
-            array(),
-            array(),
-            'AMQPStreamConnection',
-            false
-        );
+        $this->connection = $this->createMock(AMQPStreamConnection::class);
 
         $this->delay = 1;
 

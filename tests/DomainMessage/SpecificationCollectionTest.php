@@ -22,11 +22,7 @@ class SpecificationCollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function it_does_accept_objects_of_subclass_type_specification()
     {
-        $payloadSpecification = $this->createMock(
-            PayloadIsInstanceOf::class,
-            array(),
-            array('typeName')
-        );
+        $payloadSpecification = $this->createMock(PayloadIsInstanceOf::class);
 
         $specifications = new SpecificationCollection();
         $specifications = $specifications->with($payloadSpecification);

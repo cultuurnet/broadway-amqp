@@ -48,13 +48,7 @@ class AMQPPublisherTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->amqpChannel = $this->createMock(
-            AMQPChannel::class,
-            array(),
-            array(),
-            "AMQPChannel",
-            false
-        );
+        $this->amqpChannel = $this->createMock(AMQPChannel::class);
 
         $this->specification = $this->createMock(SpecificationInterface::class);
 
