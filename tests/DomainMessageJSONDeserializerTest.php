@@ -34,9 +34,7 @@ class DomainMessageJSONDeserializerTest extends \PHPUnit_Framework_TestCase
             'Broadway\Serializer\SerializableInterface'
         );
 
-        $domainMessageJSONDeserializer = new DomainMessageJSONDeserializer(
-            DummyEventNotSerializable::class
-        );
+        new DomainMessageJSONDeserializer(DummyEventNotSerializable::class);
     }
 
     /**
@@ -47,7 +45,7 @@ class DomainMessageJSONDeserializerTest extends \PHPUnit_Framework_TestCase
         $jsonData = new String(
             file_get_contents(__DIR__ . '/Dummies/domain-message-dummy-event.json')
         );
-        
+
         $expectedDomainMessage = new DomainMessage(
             'message-id-123',
             0,
