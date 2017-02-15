@@ -7,7 +7,7 @@ use Broadway\Domain\DomainMessage;
 use Broadway\Domain\Metadata;
 use CultuurNet\BroadwayAMQP\Dummies\DummyEvent;
 use CultuurNet\BroadwayAMQP\Dummies\DummyEventNotSerializable;
-use ValueObjects\String\String;
+use ValueObjects\StringLiteral\StringLiteral;
 
 class DomainMessageJSONDeserializerTest extends \PHPUnit_Framework_TestCase
 {
@@ -28,8 +28,8 @@ class DomainMessageJSONDeserializerTest extends \PHPUnit_Framework_TestCase
      */
     public function it_throws_an_error_if_payloadclass_does_not_implement_SerializableInterface()
     {
-        $this->setExpectedException(
-            \InvalidArgumentException::class,
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
             'Class \'CultuurNet\BroadwayAMQP\Dummies\DummyEventNotSerializable\' does not implement ' .
             'Broadway\Serializer\SerializableInterface'
         );
@@ -42,7 +42,7 @@ class DomainMessageJSONDeserializerTest extends \PHPUnit_Framework_TestCase
      */
     public function it_can_deserialize_a_domain_message()
     {
-        $jsonData = new String(
+        $jsonData = new StringLiteral(
             file_get_contents(__DIR__ . '/Dummies/domain-message-dummy-event.json')
         );
 

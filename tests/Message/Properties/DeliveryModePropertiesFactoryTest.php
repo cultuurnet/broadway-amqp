@@ -15,7 +15,7 @@ class DeliveryModePropertiesFactoryTest extends \PHPUnit_Framework_TestCase
     public function it_validates_the_injected_delivery_mode()
     {
         $invalidDeliveryMode = 'PERSISTENT';
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         new DeliveryModePropertiesFactory($invalidDeliveryMode);
     }
 

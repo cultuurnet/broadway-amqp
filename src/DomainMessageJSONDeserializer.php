@@ -7,7 +7,7 @@ use Broadway\Domain\DomainMessage;
 use Broadway\Domain\Metadata;
 use Broadway\Serializer\SerializableInterface;
 use CultuurNet\Deserializer\JSONDeserializer;
-use ValueObjects\String\String as StringLiteral;
+use ValueObjects\StringLiteral\StringLiteral;
 
 class DomainMessageJSONDeserializer extends JSONDeserializer
 {
