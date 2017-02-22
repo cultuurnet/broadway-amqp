@@ -37,8 +37,8 @@ class ContentTypeLookupTest extends \PHPUnit_Framework_TestCase
      */
     public function it_throws_invalid_argument_exception_when_payload_class_is_not_a_string()
     {
-        $this->setExpectedException(
-            \InvalidArgumentException::class,
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
             'Value for argument payloadClass should be a string'
         );
 
@@ -53,8 +53,8 @@ class ContentTypeLookupTest extends \PHPUnit_Framework_TestCase
      */
     public function it_throws_invalid_argument_exception_when_content_type_is_not_a_string()
     {
-        $this->setExpectedException(
-            \InvalidArgumentException::class,
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
             'Value for argument contentType should be a string'
         );
 
@@ -74,9 +74,7 @@ class ContentTypeLookupTest extends \PHPUnit_Framework_TestCase
             'application/vnd.cultuurnet.udb3-events.dummy-event+json'
         );
 
-        $this->setExpectedException(
-            \InvalidArgumentException::class
-        );
+        $this->expectException(\InvalidArgumentException::class);
 
         $contentTypeLookup->withContentType(
             DummyEvent::class,
@@ -89,8 +87,8 @@ class ContentTypeLookupTest extends \PHPUnit_Framework_TestCase
      */
     public function it_throws_a_runtime_exception_when_the_content_type_cannot_be_found()
     {
-        $this->setExpectedException(
-            \RuntimeException::class,
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage(
             'Unable to find the content type of CultuurNet\BroadwayAMQP\Dummies\DummyEvent'
         );
 

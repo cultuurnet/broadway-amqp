@@ -50,8 +50,8 @@ class PayloadOnlyBodyFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function it_throws_serialization_exception_when_payload_is_not_serializable()
     {
-        $this->setExpectedException(
-            SerializationException::class,
+        $this->expectException(SerializationException::class);
+        $this->expectExceptionMessage(
             'Unable to serialize CultuurNet\BroadwayAMQP\Dummies\DummyEventNotSerializable'
         );
 

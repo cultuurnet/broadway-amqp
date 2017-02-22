@@ -43,10 +43,8 @@ class SpecificationCollectionTest extends \PHPUnit_Framework_TestCase
             get_class($wrongSpecification)
         );
 
-        $this->setExpectedException(
-            \InvalidArgumentException::class,
-            $message
-        );
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage($message);
 
         $specifications = new SpecificationCollection();
         $specifications->with($wrongSpecification);

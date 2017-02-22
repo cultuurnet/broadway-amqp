@@ -126,8 +126,8 @@ class AMQPPublisherTest extends \PHPUnit_Framework_TestCase
             BroadwayDateTime::fromString('2015-01-02T08:40:00+0100')
         );
 
-        $this->setExpectedException(
-            \RuntimeException::class,
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage(
             'Unable to serialize CultuurNet\BroadwayAMQP\Dummies\DummyEventNotSerializable'
         );
 
