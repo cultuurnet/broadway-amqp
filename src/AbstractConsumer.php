@@ -112,18 +112,18 @@ abstract class AbstractConsumer implements ConsumerInterface
             $context['correlation_id'] = $message->get('correlation_id');
         }
 
-        if ($this->logger) {
-            $this->logger->info(
-                'received message with content-type ' . $message->get(
-                    'content_type'
-                ),
-                $context
-            );
-        }
-
-        $contentType = new StringLiteral($message->get('content_type'));
-
         try {
+            if ($this->logger) {
+                $this->logger->info(
+                    'received message with content-type ' . $message->get(
+                        'content_type'
+                    ),
+                    $context
+                );
+            }
+
+            $contentType = new StringLiteral($message->get('content_type'));
+
             $deserializer = $this->deserializerLocator->getDeserializerForContentType(
                 $contentType
             );
