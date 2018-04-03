@@ -2,29 +2,24 @@
 
 namespace CultuurNet\BroadwayAMQP;
 
-use Broadway\Domain\DateTime;
-use Broadway\Domain\DomainEventStream;
-use Broadway\Domain\DomainMessage;
-use Broadway\Domain\Metadata;
-use Broadway\EventHandling\EventBusInterface;
+use Broadway\CommandHandling\CommandBusInterface;
 use CultuurNet\Deserializer\DeserializerLocatorInterface;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
-use ValueObjects\Identity\UUID;
 use ValueObjects\StringLiteral\StringLiteral;
 
 /**
  * Forwards messages coming in via AMQP to an event bus.
  */
-class EventBusForwardingConsumer extends AbstractConsumer
+class CommandBusForwardingConsumer extends AbstractConsumer
 {
     /**
-     * @var EventBusInterface
+     * @var CommandBusInterface
      */
-    private $eventBus;
+    private $commandBus;
 
     /**
      * @param AMQPStreamConnection $connection
-     * @param EventBusInterface $eventBus
+     * @param CommandBusInterface $commandBus
      * @param DeserializerLocatorInterface $deserializerLocator
      * @param StringLiteral $consumerTag
      * @param StringLiteral $exchangeName
@@ -33,14 +28,14 @@ class EventBusForwardingConsumer extends AbstractConsumer
      */
     public function __construct(
         AMQPStreamConnection $connection,
-        EventBusInterface $eventBus,
+        CommandBusInterface $commandBus,
         DeserializerLocatorInterface $deserializerLocator,
         StringLiteral $consumerTag,
         StringLiteral $exchangeName,
         StringLiteral $queueName,
         $delay = 0
     ) {
-        $this->eventBus = $eventBus;
+        $this->commandBus = $commandBus;
 
         parent::__construct(
             $connection,
@@ -49,7 +44,7 @@ class EventBusForwardingConsumer extends AbstractConsumer
             $exchangeName,
             $queueName,
             $delay,
-            'event bus'
+            'command bus'
         );
     }
 
@@ -59,21 +54,6 @@ class EventBusForwardingConsumer extends AbstractConsumer
      */
     protected function handle($deserializedMessage, array $context)
     {
-        // If the deserializer did not return a DomainMessage yet, then
-        // consider the returned value as the payload, and wrap it in a
-        // DomainMessage.
-        if (!$deserializedMessage instanceof DomainMessage) {
-            $deserializedMessage = new DomainMessage(
-                UUID::generateAsString(),
-                0,
-                new Metadata($context),
-                $deserializedMessage,
-                DateTime::now()
-            );
-        }
-
-        $this->eventBus->publish(
-            new DomainEventStream([$deserializedMessage])
-        );
+        $this->commandBus->dispatch($deserializedMessage);
     }
 }
