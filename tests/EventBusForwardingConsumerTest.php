@@ -7,6 +7,7 @@ use Broadway\Domain\Metadata;
 use Broadway\EventHandling\EventBusInterface;
 use CultuurNet\Deserializer\DeserializerInterface;
 use CultuurNet\Deserializer\DeserializerLocatorInterface;
+use CultuurNet\Deserializer\DeserializerNotFoundException;
 use PhpAmqpLib\Channel\AbstractChannel;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
@@ -313,6 +314,37 @@ class EventBusForwardingConsumerTest extends TestCase
 
         $this->channel->expects($this->once())
             ->method('basic_reject')
+            ->with('my-delivery-tag');
+
+        $messageProperties = [
+            'content_type' => 'application/vnd.cultuurnet.udb3-events.dummy-event+json',
+            'correlation_id' => 'my-correlation-id-123'
+        ];
+
+        $messageBody = '';
+
+        $message = new AMQPMessage($messageBody, $messageProperties);
+        $message->delivery_info['channel'] = $this->channel;
+        $message->delivery_info['delivery_tag'] = 'my-delivery-tag';
+
+        $this->eventBusForwardingConsumer->consume($message);
+    }
+
+    /**
+     * @test
+     */
+    public function it_automatically_acknowledges_when_no_deserializer_was_found(): void
+    {
+        $context = [];
+        $context['correlation_id'] = new StringLiteral('my-correlation-id-123');
+
+        $this->deserializerLocator->expects($this->once())
+            ->method('getDeserializerForContentType')
+            ->with(new StringLiteral('application/vnd.cultuurnet.udb3-events.dummy-event+json'))
+            ->willThrowException(new DeserializerNotFoundException());
+
+        $this->channel->expects($this->once())
+            ->method('basic_ack')
             ->with('my-delivery-tag');
 
         $messageProperties = [
