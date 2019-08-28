@@ -9,10 +9,11 @@ use PhpAmqpLib\Channel\AbstractChannel;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use ValueObjects\StringLiteral\StringLiteral;
 
-class CommandBusForwardingConsumerTest extends \PHPUnit_Framework_TestCase
+class CommandBusForwardingConsumerTest extends TestCase
 {
     /**
      * @var AMQPStreamConnection|\PHPUnit_Framework_MockObject_MockObject

@@ -2,7 +2,9 @@
 
 namespace CultuurNet\BroadwayAMQP\DomainMessage;
 
-class SpecificationCollectionTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class SpecificationCollectionTest extends TestCase
 {
     /**
      * @test

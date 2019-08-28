@@ -13,13 +13,14 @@ use CultuurNet\BroadwayAMQP\Message\DelegatingAMQPMessageFactory;
 use CultuurNet\BroadwayAMQP\Message\Properties\CorrelationIdPropertiesFactory;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
 /**
  * Class AMQPPublisherTest
  * @package CultuurNet\BroadwayAMQP
  */
-class AMQPPublisherTest extends \PHPUnit_Framework_TestCase
+class AMQPPublisherTest extends TestCase
 {
     /**
      * @var AMQPChannel|\PHPUnit_Framework_MockObject_MockObject

@@ -8,8 +8,9 @@ use Broadway\Domain\Metadata;
 use Broadway\Domain\DateTime as BroadwayDateTime;
 use CultuurNet\BroadwayAMQP\Dummies\DummyEvent;
 use CultuurNet\BroadwayAMQP\Dummies\DummyEventSubclass;
+use PHPUnit\Framework\TestCase;
 
-class CombinedDomainMessageNormalizerTest extends \PHPUnit_Framework_TestCase
+class CombinedDomainMessageNormalizerTest extends TestCase
 {
     /**
      * @var CombinedDomainMessageNormalizer|\PHPUnit_Framework_MockObject_MockObject

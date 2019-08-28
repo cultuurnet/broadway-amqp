@@ -8,8 +8,9 @@ use Broadway\Domain\Metadata;
 use Broadway\Serializer\SerializationException;
 use CultuurNet\BroadwayAMQP\Dummies\DummyEvent;
 use CultuurNet\BroadwayAMQP\Dummies\DummyEventNotSerializable;
+use PHPUnit\Framework\TestCase;
 
-class EntireDomainMessageBodyFactoryTest extends \PHPUnit_Framework_TestCase
+class EntireDomainMessageBodyFactoryTest extends TestCase
 {
     /**
      * @var EntireDomainMessageBodyFactory

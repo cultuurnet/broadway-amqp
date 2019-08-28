@@ -6,8 +6,9 @@ use Broadway\Domain\DateTime as BroadwayDateTime;
 use Broadway\Domain\DomainMessage;
 use Broadway\Domain\Metadata;
 use CultuurNet\BroadwayAMQP\Dummies\DummyEvent;
+use PHPUnit\Framework\TestCase;
 
-class PayloadInNamespaceTest extends \PHPUnit_Framework_TestCase
+class PayloadInNamespaceTest extends TestCase
 {
     /**
      * @var DomainMessage

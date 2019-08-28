@@ -9,8 +9,9 @@ use CultuurNet\BroadwayAMQP\Dummies\DummyEvent;
 use CultuurNet\BroadwayAMQP\Message\Body\BodyFactoryInterface;
 use CultuurNet\BroadwayAMQP\Message\Properties\PropertiesFactoryInterface;
 use PhpAmqpLib\Message\AMQPMessage;
+use PHPUnit\Framework\TestCase;
 
-class DelegatingAMQPMessageFactoryTest extends \PHPUnit_Framework_TestCase
+class DelegatingAMQPMessageFactoryTest extends TestCase
 {
     /**
      * @var BodyFactoryInterface|\PHPUnit_Framework_MockObject_MockObject

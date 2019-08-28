@@ -5,8 +5,9 @@ namespace CultuurNet\BroadwayAMQP\Message\Properties;
 use Broadway\Domain\DateTime;
 use Broadway\Domain\DomainMessage;
 use Broadway\Domain\Metadata;
+use PHPUnit\Framework\TestCase;
 
-class CorrelationIdPropertiesFactoryTest extends \PHPUnit_Framework_TestCase
+class CorrelationIdPropertiesFactoryTest extends TestCase
 {
     /**
      * @var CorrelationIdPropertiesFactory
