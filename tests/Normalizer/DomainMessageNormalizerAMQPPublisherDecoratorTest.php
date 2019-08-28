@@ -8,6 +8,7 @@ use Broadway\Domain\Metadata;
 use Broadway\Domain\DateTime as BroadwayDateTime;
 use CultuurNet\BroadwayAMQP\Dummies\DummyEvent;
 use Broadway\EventHandling\EventListenerInterface as AMQPPublisherInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -17,17 +18,17 @@ use PHPUnit\Framework\TestCase;
 class DomainMessageNormalizerAMQPPublisherDecoratorTest extends TestCase
 {
     /**
-     * @var DomainMessageNormalizerAMQPPublisherDecorator|\PHPUnit_Framework_MockObject_MockObject
+     * @var DomainMessageNormalizerAMQPPublisherDecorator|MockObject
      */
     private $domainMessageNormalizerAMQPPublisherDecorator;
     
     /**
-     * @var AMQPPublisherInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var AMQPPublisherInterface|MockObject
      */
     private $amqpPublisher;
     
     /**
-     * @var DomainMessageNormalizerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var DomainMessageNormalizerInterface|MockObject
      */
     private $domainMessageNormalizer;
 

@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 class AMQPPublisherDecoratorTest extends TestCase
 {
     /**
-     * @var AMQPPublisherInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var AMQPPublisherInterface|\PHPUnit\Framework\MockObject\
      */
     private $amqpPublisher;
 

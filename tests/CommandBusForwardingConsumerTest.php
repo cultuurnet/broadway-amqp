@@ -9,6 +9,7 @@ use PhpAmqpLib\Channel\AbstractChannel;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use ValueObjects\StringLiteral\StringLiteral;
@@ -16,7 +17,7 @@ use ValueObjects\StringLiteral\StringLiteral;
 class CommandBusForwardingConsumerTest extends TestCase
 {
     /**
-     * @var AMQPStreamConnection|\PHPUnit_Framework_MockObject_MockObject
+     * @var AMQPStreamConnection|MockObject
      */
     private $connection;
 
@@ -36,17 +37,17 @@ class CommandBusForwardingConsumerTest extends TestCase
     private $consumerTag;
 
     /**
-     * @var CommandBusInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var CommandBusInterface|MockObject
      */
     private $commandBus;
 
     /**
-     * @var DeserializerLocatorInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var DeserializerLocatorInterface|MockObject
      */
     private $deserializerLocator;
 
     /**
-     * @var AbstractChannel|\PHPUnit_Framework_MockObject_MockObject
+     * @var AbstractChannel|MockObject
      */
     private $channel;
 
@@ -63,12 +64,12 @@ class CommandBusForwardingConsumerTest extends TestCase
     private $commandBusForwardingConsumer;
 
     /**
-     * @var LoggerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var LoggerInterface|MockObject
      */
     private $logger;
 
     /**
-     * @var DeserializerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var DeserializerInterface|MockObject
      */
     private $deserializer;
 
@@ -103,7 +104,7 @@ class CommandBusForwardingConsumerTest extends TestCase
             $this->delay
         );
 
-        /** @var LoggerInterface|\PHPUnit_Framework_MockObject_MockObject $logger */
+        /** @var LoggerInterface|MockObject $logger */
         $this->logger = $this->createMock(LoggerInterface::class);
         $this->commandBusForwardingConsumer->setLogger($this->logger);
 
