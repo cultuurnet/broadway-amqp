@@ -153,6 +153,8 @@ abstract class AbstractConsumer implements ConsumerInterface
                     $context
                 );
             }
+
+            return;
         } catch (\Exception $e) {
             if ($this->logger) {
                 $this->logger->error(
