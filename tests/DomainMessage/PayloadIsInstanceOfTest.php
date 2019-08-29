@@ -8,8 +8,9 @@ use Broadway\Domain\Metadata;
 use CultuurNet\BroadwayAMQP\Dummies\DummyEvent;
 use CultuurNet\BroadwayAMQP\Dummies\DummyEventNotSerializable;
 use CultuurNet\BroadwayAMQP\Dummies\DummyEventSubclass;
+use PHPUnit\Framework\TestCase;
 
-class PayloadIsInstanceOfTest extends \PHPUnit_Framework_TestCase
+class PayloadIsInstanceOfTest extends TestCase
 {
     /**
      * @var DomainMessage

@@ -7,17 +7,20 @@ use Broadway\Domain\Metadata;
 use Broadway\EventHandling\EventBusInterface;
 use CultuurNet\Deserializer\DeserializerInterface;
 use CultuurNet\Deserializer\DeserializerLocatorInterface;
+use CultuurNet\Deserializer\DeserializerNotFoundException;
 use PhpAmqpLib\Channel\AbstractChannel;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use ValueObjects\StringLiteral\StringLiteral;
 
-class EventBusForwardingConsumerTest extends \PHPUnit_Framework_TestCase
+class EventBusForwardingConsumerTest extends TestCase
 {
     /**
-     * @var AMQPStreamConnection|\PHPUnit_Framework_MockObject_MockObject
+     * @var AMQPStreamConnection|MockObject
      */
     private $connection;
 
@@ -37,17 +40,17 @@ class EventBusForwardingConsumerTest extends \PHPUnit_Framework_TestCase
     private $consumerTag;
 
     /**
-     * @var EventBusInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var EventBusInterface|MockObject
      */
     private $eventBus;
 
     /**
-     * @var DeserializerLocatorInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var DeserializerLocatorInterface|MockObject
      */
     private $deserializerLocator;
 
     /**
-     * @var AbstractChannel|\PHPUnit_Framework_MockObject_MockObject
+     * @var AbstractChannel|MockObject
      */
     private $channel;
 
@@ -64,12 +67,12 @@ class EventBusForwardingConsumerTest extends \PHPUnit_Framework_TestCase
     private $eventBusForwardingConsumer;
 
     /**
-     * @var LoggerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var LoggerInterface|MockObject
      */
     private $logger;
 
     /**
-     * @var DeserializerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var DeserializerInterface|MockObject
      */
     private $deserializer;
 
@@ -104,7 +107,7 @@ class EventBusForwardingConsumerTest extends \PHPUnit_Framework_TestCase
             $this->delay
         );
 
-        /** @var LoggerInterface|\PHPUnit_Framework_MockObject_MockObject $logger */
+        /** @var LoggerInterface|MockObject $logger */
         $this->logger = $this->createMock(LoggerInterface::class);
         $this->eventBusForwardingConsumer->setLogger($this->logger);
 
@@ -311,6 +314,37 @@ class EventBusForwardingConsumerTest extends \PHPUnit_Framework_TestCase
 
         $this->channel->expects($this->once())
             ->method('basic_reject')
+            ->with('my-delivery-tag');
+
+        $messageProperties = [
+            'content_type' => 'application/vnd.cultuurnet.udb3-events.dummy-event+json',
+            'correlation_id' => 'my-correlation-id-123'
+        ];
+
+        $messageBody = '';
+
+        $message = new AMQPMessage($messageBody, $messageProperties);
+        $message->delivery_info['channel'] = $this->channel;
+        $message->delivery_info['delivery_tag'] = 'my-delivery-tag';
+
+        $this->eventBusForwardingConsumer->consume($message);
+    }
+
+    /**
+     * @test
+     */
+    public function it_automatically_acknowledges_when_no_deserializer_was_found(): void
+    {
+        $context = [];
+        $context['correlation_id'] = new StringLiteral('my-correlation-id-123');
+
+        $this->deserializerLocator->expects($this->once())
+            ->method('getDeserializerForContentType')
+            ->with(new StringLiteral('application/vnd.cultuurnet.udb3-events.dummy-event+json'))
+            ->willThrowException(new DeserializerNotFoundException());
+
+        $this->channel->expects($this->once())
+            ->method('basic_ack')
             ->with('my-delivery-tag');
 
         $messageProperties = [

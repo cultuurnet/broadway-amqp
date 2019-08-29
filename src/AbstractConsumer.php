@@ -3,6 +3,7 @@
 namespace CultuurNet\BroadwayAMQP;
 
 use CultuurNet\Deserializer\DeserializerLocatorInterface;
+use CultuurNet\Deserializer\DeserializerNotFoundException;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -142,6 +143,18 @@ abstract class AbstractConsumer implements ConsumerInterface
             }
 
             $this->handle($deserializedMessage, $context);
+        } catch (DeserializerNotFoundException $e) {
+            $message->delivery_info['channel']->basic_ack(
+                $message->delivery_info['delivery_tag']
+            );
+            if ($this->logger) {
+                $this->logger->info(
+                    'auto acknowledged message because no deserializer was configured for it',
+                    $context
+                );
+            }
+
+            return;
         } catch (\Exception $e) {
             if ($this->logger) {
                 $this->logger->error(

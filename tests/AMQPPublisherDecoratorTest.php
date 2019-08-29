@@ -7,11 +7,12 @@ use Broadway\Domain\Metadata;
 use Broadway\Domain\DateTime as BroadwayDateTime;
 use CultuurNet\BroadwayAMQP\Dummies\DummyEvent;
 use Broadway\EventHandling\EventListenerInterface as AMQPPublisherInterface;
+use PHPUnit\Framework\TestCase;
 
-class AMQPPublisherDecoratorTest extends \PHPUnit_Framework_TestCase
+class AMQPPublisherDecoratorTest extends TestCase
 {
     /**
-     * @var AMQPPublisherInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var AMQPPublisherInterface|\PHPUnit\Framework\MockObject\
      */
     private $amqpPublisher;
 

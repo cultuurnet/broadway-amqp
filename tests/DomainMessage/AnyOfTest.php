@@ -7,8 +7,9 @@ use Broadway\Domain\DomainMessage;
 use Broadway\Domain\Metadata;
 use CultuurNet\BroadwayAMQP\Dummies\DummyEvent;
 use CultuurNet\BroadwayAMQP\Dummies\DummyEventNotSerializable;
+use PHPUnit\Framework\TestCase;
 
-class AnyOfTest extends \PHPUnit_Framework_TestCase
+class AnyOfTest extends TestCase
 {
     /**
      * @var AnyOf

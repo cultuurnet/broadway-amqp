@@ -5,19 +5,18 @@
     "license": "Apache-2.0",
     "authors": [],
     "require": {
+        "2dotstwice/collection": "~1.1",
         "broadway/broadway": "~0.10",
-        "php-amqplib/php-amqplib": "2.6.*",
-        "cultuurnet/valueobjects": "~3.0",
-        "psr/log": "~1.0",
         "cultuurnet/deserializer": "~0.1",
-        "2dotstwice/collection": "~1.1"
+        "cultuurnet/valueobjects": "~3.0",
+        "php-amqplib/php-amqplib": "2.6.*",
+        "psr/log": "~1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "~5.7",
-        "phpunit/php-token-stream": "1.4.6",
-        "squizlabs/php_codesniffer": "2.6.1",
         "phing/phing": "~2.11",
-        "satooshi/php-coveralls": "~0.7"
+        "php-coveralls/php-coveralls": "^2.1",
+        "phpunit/phpunit": "^7.5",
+        "squizlabs/php_codesniffer": "2.6.1"
     },
     "autoload": {
         "psr-4": {
@@ -35,5 +34,8 @@
         "branch-alias": {
             "dev-master": "0.x-dev"
         }
+    },
+    "config": {
+        "sort-packages": true
     }
 }

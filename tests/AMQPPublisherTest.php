@@ -13,21 +13,23 @@ use CultuurNet\BroadwayAMQP\Message\DelegatingAMQPMessageFactory;
 use CultuurNet\BroadwayAMQP\Message\Properties\CorrelationIdPropertiesFactory;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
 /**
  * Class AMQPPublisherTest
  * @package CultuurNet\BroadwayAMQP
  */
-class AMQPPublisherTest extends \PHPUnit_Framework_TestCase
+class AMQPPublisherTest extends TestCase
 {
     /**
-     * @var AMQPChannel|\PHPUnit_Framework_MockObject_MockObject
+     * @var AMQPChannel|MockObject
      */
     private $amqpChannel;
 
     /**
-     * @var SpecificationInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var SpecificationInterface|MockObject
      */
     private $specification;
 
@@ -141,7 +143,7 @@ class AMQPPublisherTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectSpecificationIsSatisfied();
 
-        /** @var LoggerInterface|\PHPUnit_Framework_MockObject_MockObject $logger */
+        /** @var LoggerInterface|MockObject $logger */
         $logger = $this->createMock(LoggerInterface::class);
         $this->amqpPublisher->setLogger($logger);
 
@@ -162,7 +164,7 @@ class AMQPPublisherTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectSpecificationIsNotSatisfied();
 
-        /** @var LoggerInterface|\PHPUnit_Framework_MockObject_MockObject $logger */
+        /** @var LoggerInterface|MockObject $logger */
         $logger = $this->createMock(LoggerInterface::class);
         $this->amqpPublisher->setLogger($logger);
 

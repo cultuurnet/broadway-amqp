@@ -5,16 +5,18 @@ namespace CultuurNet\BroadwayAMQP\Message\Properties;
 use Broadway\Domain\DateTime;
 use Broadway\Domain\DomainMessage;
 use Broadway\Domain\Metadata;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
-class CompositePropertiesFactoryTest extends \PHPUnit_Framework_TestCase
+class CompositePropertiesFactoryTest extends TestCase
 {
     /**
-     * @var PropertiesFactoryInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var PropertiesFactoryInterface|MockObject
      */
     private $mockFactory1;
 
     /**
-     * @var PropertiesFactoryInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var PropertiesFactoryInterface|MockObject
      */
     private $mockFactory2;
 

@@ -3,8 +3,9 @@
 namespace CultuurNet\BroadwayAMQP\Message\Properties;
 
 use CultuurNet\BroadwayAMQP\Dummies\DummyEvent;
+use PHPUnit\Framework\TestCase;
 
-class ContentTypeLookupTest extends \PHPUnit_Framework_TestCase
+class ContentTypeLookupTest extends TestCase
 {
     /**
      * @var ContentTypeLookup
