@@ -3,7 +3,12 @@
     "description": "AMQP integration for Broadway library",
     "type": "library",
     "license": "Apache-2.0",
-    "authors": [],
+    "authors": [
+        {
+            "name": "publiq vzw",
+            "email": "info@publiq.be"
+        }
+    ],
     "require": {
         "2dotstwice/collection": "~1.1",
         "broadway/broadway": "~0.10",
