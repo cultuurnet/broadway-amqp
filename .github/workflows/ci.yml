@@ -31,4 +31,4 @@ jobs:
         run: composer install --no-progress --no-suggest
 
       - name: Run Phing
-        run: composer run-script phing
+        run: composer phing
