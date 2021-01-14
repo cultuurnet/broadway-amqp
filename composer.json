@@ -3,7 +3,12 @@
     "description": "AMQP integration for Broadway library",
     "type": "library",
     "license": "Apache-2.0",
-    "authors": [],
+    "authors": [
+        {
+            "name": "publiq vzw",
+            "email": "info@publiq.be"
+        }
+    ],
     "require": {
         "2dotstwice/collection": "~1.1",
         "broadway/broadway": "~0.10",
@@ -14,7 +19,6 @@
     },
     "require-dev": {
         "phing/phing": "~2.11",
-        "php-coveralls/php-coveralls": "^2.1",
         "phpunit/phpunit": "^7.5",
         "squizlabs/php_codesniffer": "2.6.1"
     },
@@ -37,5 +41,8 @@
     },
     "config": {
         "sort-packages": true
+    },
+    "scripts": {
+        "phing": "./vendor/bin/phing test"
     }
 }
